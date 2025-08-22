@@ -1,0 +1,3 @@
+- create signin page and implement the logic if the user logined then the token will generate and save it in localstorge.
+- create privateroute page where token will be fetchex from the localstorage and if it is present then allow the dashboard for rendering else login page.
+- wrap privateRoute component around dashboard
