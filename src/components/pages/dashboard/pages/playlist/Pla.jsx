@@ -1,37 +1,477 @@
-import React from 'react';
 
-const playlists = [
-  
-  { title: "Chill Vibes", songs: 25, img: "data:image/jpeg;base64,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" },
-  { title: "Workout Mix", songs: 18, img: "https://s.saregama.tech/image/s/fw_800/3/82/07/aaj-ki-raat_web-banner_805x384_1723025727.jpg" },
-  { title: "Romantic Hits", songs: 30, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZmgwL78QdY5M_OCVrLGDmdxxsEiyqjzIG-A&s" },
-  { title: "Party Time", songs: 40, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTat1AS1aloFP8KCVqjVr_ydEabaoNufBwScA&s" },
-  { title: "Focus Beats", songs: 15, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5LAQUAccKTRan-aYW1Cx6U1HOY5H0GKG_UQ&s" },
-  { title: "Classic Oldies", songs: 28, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRabuUvJHznzjXEyUrMLo9W6tLJNJiaTmmw8w&s" },
-  { title: "Hip Hop Flow", songs: 22, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw2fKcowpVVv18_pR9lqyRz2FBSKYRzMgYyw&s" },
-  { title: "Jazz Nights", songs: 35, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRrFf0An-tUhTi_Rn0FRSXYX3E4cjzi7R8IA&s" },
-  { title: "Rock Legends", songs: 50, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGVNTJKvwzL7slHeZOBoDcCfU_kN0-6FwiDg&s" },
 
-];
+import React, { useState, useEffect, useContext } from 'react';
+import { FaPlus, FaPlay, FaTrash, FaMusic, FaRandom, FaEdit, FaSearch, FaFilter, FaSort } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { PlayerContext } from '../../../../../context/PlayerContext';
+import { useTheme } from '../../../../../context/ThemeContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const Pla = () => {
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">My Playlists</h2>
-      <div>
-        {playlists.map((pl, i) => (
-          <div key={i} className="flex items-center p-2 border-b">
-            <img src={pl.img} alt="Playlist" className="w-12 h-12 object-cover rounded mr-4" />
-            <div>
-              <h3 className="font-semibold">{pl.title}</h3>
-              <p className="text-sm text-gray-500">By You • {pl.songs} songs</p>
+const buildImageUrl = (path) => {
+    if (!path) return 'https://via.placeholder.com/160';
+    if (path.startsWith('http')) return path;
+    return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+};
+
+// Function to generate a gradient based on playlist name
+const generateGradient = (name) => {
+    const colors = [
+        'from-purple-500 to-pink-500',
+        'from-blue-500 to-cyan-500',
+        'from-green-500 to-emerald-500',
+        'from-yellow-500 to-orange-500',
+        'from-red-500 to-pink-500',
+        'from-indigo-500 to-purple-500',
+        'from-teal-500 to-blue-500',
+        'from-amber-500 to-yellow-500'
+    ];
+    
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    return colors[Math.abs(hash) % colors.length];
+};
+
+const PlaylistsPage = () => {
+    const [playlists, setPlaylists] = useState([]);
+    const [filteredPlaylists, setFilteredPlaylists] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [newPlaylistName, setNewPlaylistName] = useState("");
+    const [editingPlaylist, setEditingPlaylist] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortOption, setSortOption] = useState("name");
+    const [filterOption, setFilterOption] = useState("all");
+    const { fetchUserPlaylists, playSong } = useContext(PlayerContext);
+    const { isDarkMode } = useTheme();
+    const navigate = useNavigate();
+
+    const fetchPlaylists = async () => {
+        setLoading(true);
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const { data } = await axios.get('http://localhost:9999/user/playlists', config);
+            setPlaylists(data);
+            setFilteredPlaylists(data);
+        } catch (error) { 
+            console.error("Failed to fetch playlists", error); 
+        } finally { 
+            setLoading(false); 
+        }
+    };
+
+    useEffect(() => { 
+        fetchPlaylists(); 
+    }, []);
+
+    // Filter and sort playlists
+    useEffect(() => {
+        let result = [...playlists];
+        
+        // Apply search filter
+        if (searchQuery) {
+            result = result.filter(playlist => 
+                playlist.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+        
+        // Apply content filter
+        if (filterOption === "empty") {
+            result = result.filter(playlist => playlist.songs.length === 0);
+        } else if (filterOption === "hasSongs") {
+            result = result.filter(playlist => playlist.songs.length > 0);
+        }
+        
+        // Apply sorting
+        if (sortOption === "name") {
+            result.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortOption === "songs") {
+            result.sort((a, b) => b.songs.length - a.songs.length);
+        } else if (sortOption === "recent") {
+            // Assuming playlists have a createdAt field
+            result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        
+        setFilteredPlaylists(result);
+    }, [playlists, searchQuery, sortOption, filterOption]);
+
+    const handleCreatePlaylist = async (e) => {
+        e.preventDefault();
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.post('http://localhost:9999/user/playlists', { name: newPlaylistName }, config);
+            setIsModalOpen(false); 
+            setNewPlaylistName("");
+            fetchPlaylists();
+            fetchUserPlaylists();
+        } catch (error) { 
+            alert("Failed to create playlist."); 
+        }
+    };
+
+    const handleEditPlaylist = async (e) => {
+        e.preventDefault();
+        try {
+            const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.put(`http://localhost:9999/user/playlists/${editingPlaylist._id}`, 
+                { name: newPlaylistName }, config);
+            setIsEditModalOpen(false); 
+            setNewPlaylistName("");
+            setEditingPlaylist(null);
+            fetchPlaylists();
+            fetchUserPlaylists();
+        } catch (error) { 
+            alert("Failed to update playlist."); 
+        }
+    };
+
+    const handleQuickPlay = async (playlistId) => {
+        try {
+             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+             const config = { headers: { Authorization: `Bearer ${token}` } };
+             const { data: playlistDetails } = await axios.get(`http://localhost:9999/user/playlists/${playlistId}`, config);
+             if (playlistDetails.songs.length > 0) {
+                 playSong(playlistDetails.songs[0], playlistDetails.songs, {type: 'Playlist', name: playlistDetails.name});
+             } else { 
+                 alert("This playlist is empty!"); 
+             }
+        } catch(error) { 
+            console.error("Could not play playlist", error); 
+        }
+    };
+
+    const handleShufflePlay = async (playlistId) => {
+        try {
+             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+             const config = { headers: { Authorization: `Bearer ${token}` } };
+             const { data: playlistDetails } = await axios.get(`http://localhost:9999/user/playlists/${playlistId}`, config);
+             if (playlistDetails.songs.length > 0) {
+                 // Shuffle the songs array
+                 const shuffledSongs = [...playlistDetails.songs].sort(() => Math.random() - 0.5);
+                 playSong(shuffledSongs[0], shuffledSongs, {type: 'Playlist', name: playlistDetails.name});
+             } else { 
+                 alert("This playlist is empty!"); 
+             }
+        } catch(error) { 
+            console.error("Could not play playlist", error); 
+        }
+    };
+
+    const handleDeletePlaylist = async (playlistId, playlistName) => {
+        if (window.confirm(`Delete playlist "${playlistName}"?`)) {
+            try {
+                const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+                await axios.delete(`http://localhost:9999/user/playlists/${playlistId}`, config);
+                setPlaylists(playlists.filter(p => p._id !== playlistId));
+                fetchUserPlaylists();
+            } catch (error) { 
+                alert("Failed to delete playlist."); 
+            }
+        }
+    };
+
+    const openEditModal = (playlist) => {
+        setEditingPlaylist(playlist);
+        setNewPlaylistName(playlist.name);
+        setIsEditModalOpen(true);
+    };
+
+    return (
+        <div className={`min-h-screen transition-colors duration-300 p-6 md:p-10 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+            {/* Create Modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <motion.div 
+                        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div 
+                            className={`p-8 rounded-2xl shadow-2xl w-full max-w-sm ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
+                            initial={{ opacity: 0, scale: 0.9 }} 
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                        >
+                            <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Create New Playlist</h2>
+                            <form onSubmit={handleCreatePlaylist}>
+                                <input 
+                                    type="text" 
+                                    value={newPlaylistName} 
+                                    onChange={(e) => setNewPlaylistName(e.target.value)}
+                                    placeholder="My Awesome Playlist"
+                                    className={`w-full p-3 rounded mb-6 focus:ring-2 focus:outline-none transition-colors ${isDarkMode ? 'bg-gray-700 text-white focus:ring-green-400' : 'bg-gray-100 text-gray-900 focus:ring-green-500'}`}
+                                    required
+                                    autoFocus
+                                />
+                                <div className="flex justify-end space-x-4">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsModalOpen(false)} 
+                                        className={`px-6 py-2 rounded-full transition-colors ${isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'}`}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="px-6 py-2 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors"
+                                    >
+                                        Create
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Edit Modal */}
+            <AnimatePresence>
+                {isEditModalOpen && (
+                    <motion.div 
+                        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div 
+                            className={`p-8 rounded-2xl shadow-2xl w-full max-w-sm ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
+                            initial={{ opacity: 0, scale: 0.9 }} 
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                        >
+                            <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Rename Playlist</h2>
+                            <form onSubmit={handleEditPlaylist}>
+                                <input 
+                                    type="text" 
+                                    value={newPlaylistName} 
+                                    onChange={(e) => setNewPlaylistName(e.target.value)}
+                                    placeholder="Playlist Name"
+                                    className={`w-full p-3 rounded mb-6 focus:ring-2 focus:outline-none transition-colors ${isDarkMode ? 'bg-gray-700 text-white focus:ring-green-400' : 'bg-gray-100 text-gray-900 focus:ring-green-500'}`}
+                                    required
+                                    autoFocus
+                                />
+                                <div className="flex justify-end space-x-4">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsEditModalOpen(false)} 
+                                        className={`px-6 py-2 rounded-full transition-colors ${isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'}`}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="px-6 py-2 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h1 className={`text-4xl font-bold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Your Playlists</h1>
+                    <p className={`mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Create and manage your music collections</p>
+                </div>
+                <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className={`font-bold py-3 px-6 rounded-full flex items-center shadow-lg transition-colors ${isDarkMode ? 'bg-green-700 hover:bg-green-600 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+                >
+                    <FaPlus className="mr-2" /> New Playlist
+                </button>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
+            {/* Search and Filter Bar */}
+            <div className={`p-4 rounded-xl mb-8 ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-md'}`}>
+                <div className="flex flex-col md:flex-row gap-4 items-center">
+                    <div className={`flex items-center flex-1 p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                        <FaSearch className={`mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <input
+                            type="text"
+                            placeholder="Search playlists..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={`w-full bg-transparent focus:outline-none ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                        />
+                    </div>
+                    
+                    <div className="flex gap-2">
+                        <div className={`relative flex items-center p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                            <FaFilter className={`mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                            <select
+                                value={filterOption}
+                                onChange={(e) => setFilterOption(e.target.value)}
+                                className={`appearance-none bg-transparent focus:outline-none ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                            >
+                                <option value="all">All Playlists</option>
+                                <option value="hasSongs">With Songs</option>
+                                <option value="empty">Empty</option>
+                            </select>
+                        </div>
+                        
+                        <div className={`relative flex items-center p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                            <FaSort className={`mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                            <select
+                                value={sortOption}
+                                onChange={(e) => setSortOption(e.target.value)}
+                                className={`appearance-none bg-transparent focus:outline-none ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                            >
+                                <option value="name">By Name</option>
+                                <option value="songs">By Song Count</option>
+                                <option value="recent">Recently Added</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-export default Pla
+            {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {[...Array(8)].map((_, i) => (
+                        <div key={i} className={`p-4 rounded-2xl animate-pulse ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                            <div className={`w-full h-40 rounded-xl mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                            <div className={`h-4 rounded mb-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                            <div className={`h-3 rounded w-2/3 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <motion.div 
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        visible: { transition: { staggerChildren: 0.1 } }
+                    }}
+                >
+                    {filteredPlaylists.length === 0 ? (
+                        <div className="col-span-full text-center py-20">
+                            <div className={`w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+                                <FaMusic className={`text-3xl ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                            </div>
+                            <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {searchQuery ? "No matching playlists" : "No playlists yet"}
+                            </h2>
+                            <p className={`mb-6 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                                {searchQuery ? "Try a different search term" : "Create your first playlist to organize your favorite songs"}
+                            </p>
+                            {!searchQuery && (
+                                <button 
+                                    onClick={() => setIsModalOpen(true)} 
+                                    className={`font-bold py-3 px-8 rounded-full hover:bg-green-600 transition-colors ${isDarkMode ? 'bg-green-700 text-white' : 'bg-green-500 text-white'}`}
+                                >
+                                    <FaPlus className="mr-2 inline" /> Create First Playlist
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            {/* Create Playlist Card */}
+                            <motion.div
+                                variants={{
+                                    hidden: { opacity: 0, y: 20 },
+                                    visible: { opacity: 1, y: 0 }
+                                }}
+                                className={`p-6 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed cursor-pointer transition-colors h-80 ${isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-green-500' : 'bg-white border-gray-300 hover:border-green-400 shadow-md'}`}
+                                onClick={() => setIsModalOpen(true)}
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                    <FaPlus className={`text-2xl ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                                </div>
+                                <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Create New Playlist</p>
+                            </motion.div>
+
+                            {/* Playlist Cards */}
+                            {filteredPlaylists.map(pl => (
+                                <motion.div 
+                                    key={pl._id}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 }
+                                    }}
+                                    className={`p-4 rounded-2xl shadow-md hover:shadow-lg transition-all group relative overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
+                                    whileHover={{ y: -5 }}
+                                >
+                                    <div className="relative">
+                                        {pl.coverArt ? (
+                                            <img 
+                                                src={buildImageUrl(pl.coverArt)} 
+                                                alt={pl.name} 
+                                                className="w-full h-48 object-cover rounded-xl mb-4 shadow-md"
+                                            />
+                                        ) : (
+                                            <div className={`w-full h-48 rounded-xl mb-4 flex items-center justify-center shadow-md bg-gradient-to-br ${generateGradient(pl.name)}`}>
+                                                <FaMusic className="text-4xl text-white opacity-80" />
+                                            </div>
+                                        )}
+                                        
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-xl transition-opacity gap-2">
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); handleQuickPlay(pl._id); }}
+                                                className="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 transition-colors transform hover:scale-110"
+                                                title="Play"
+                                            >
+                                                <FaPlay />
+                                            </button>
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); handleShufflePlay(pl._id); }}
+                                                className="bg-purple-500 text-white p-3 rounded-full hover:bg-purple-600 transition-colors transform hover:scale-110"
+                                                title="Shuffle Play"
+                                            >
+                                                <FaRandom />
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="absolute top-2 right-2 flex gap-2">
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); openEditModal(pl); }}
+                                                className="p-2 bg-blue-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                title="Edit"
+                                            >
+                                                <FaEdit size={12} />
+                                            </button>
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); handleDeletePlaylist(pl._id, pl.name); }}
+                                                className="p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                title="Delete"
+                                            >
+                                                <FaTrash size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div 
+                                        className="cursor-pointer"
+                                        onClick={() => navigate(`/dashboard/playlist/${pl._id}`)}
+                                    >
+                                        <h3 className="font-bold text-lg truncate">{pl.name}</h3>
+                                        <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                            {pl.songs.length} song{pl.songs.length !== 1 ? 's' : ''}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </>
+                    )}
+                </motion.div>
+            )}
+        </div>
+    );
+};
+
+export default PlaylistsPage;

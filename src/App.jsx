@@ -1,12 +1,17 @@
-import React from "react"
-import { BrowserRouter } from "react-router-dom"
-import AllRoutes from "./components/routes/AllRoutes"
+
+import React from "react";
+import AllRoutes from "./components/routes/AllRoutes";
+import { PlayerProvider } from "./context/PlayerContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const App = () => {
     return (
-        <div>
-            <AllRoutes />
-        </div>
-    )
-}
-export default App
+        <ThemeProvider>
+            <PlayerProvider>
+                <AllRoutes />
+            </PlayerProvider>
+        </ThemeProvider>
+    );
+};
+
+export default App;

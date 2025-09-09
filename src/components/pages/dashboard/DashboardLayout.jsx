@@ -1,25 +1,32 @@
-import React from 'react';
-import { Outlet } from "react-router-dom"
-import DashBoard from "./DashBoard"
 
 
-import PlayerControls from "../../playercontrols/PlayerControls"
+
+
+// components/dashboard/DashboardLayout.js (updated with theme)
+import React, { useState } from 'react';
+import { Outlet } from "react-router-dom";
+import DashBoard from "./DashBoard";
+import PlayerControls from "../../playercontrols/PlayerControls";
+import MobileFooter from './MobileFooter';
+import MusicSection from './pages/player/MusicSection'; 
 
 const DashboardLayout = () => {
+  const [isPlayerOpen, setPlayerOpen] = useState(false);
+
   return (
-    <div className="relative min-h-screen bg-gray-900 text-white">
-     
+    <div className="relative min-h-screen text-white transition-colors duration-300">
       <DashBoard /> 
       
-      
-      <main className="ml-0 md:ml-64 p-6 pb-28">
+      <main className="ml-0 md:ml-64 p-6 pt-24 md:pt-6 pb-48 md:pb-28">
         <Outlet /> 
       </main>
       
-      
-      <PlayerControls />
+      <PlayerControls onPlayerOpen={() => setPlayerOpen(true)} />
+      <MobileFooter />
+
+      {isPlayerOpen && <MusicSection onClose={() => setPlayerOpen(false)} />}
     </div>
   )
 }
 
-export default DashboardLayout
+export default DashboardLayout;
