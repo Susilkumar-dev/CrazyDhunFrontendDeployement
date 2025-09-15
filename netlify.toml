@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  VITE_CLOUDINARY_CLOUD_NAME = "dnnni4us0"
+  VITE_CLOUDINARY_UPLOAD_PRESET = "dhunimage"
+  VITE_API_URL = "https://crazydhunbeats-api.onrender.com"
