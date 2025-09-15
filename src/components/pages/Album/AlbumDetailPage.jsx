@@ -1,121 +1,5 @@
 
 
-// import React, { useEffect, useState, useContext } from "react";
-// import { useParams, Link } from "react-router-dom";
-// import axios from "axios";
-// import { PlayerContext } from "../../../context/PlayerContext";
-// import { FaPlay } from "react-icons/fa";
-
-// const buildImageUrl = (path) => {
-//   if (!path) return "https://via.placeholder.com/160";
-//   if (path.startsWith("http")) return path;
-//   return `http://localhost:9999/${path.replace(/\\/g, "/")}`;
-// };
-
-// const AlbumDetailPage = () => {
-//   const { albumName } = useParams();
-//   const [songs, setSongs] = useState([]);
-//   const [albumSongs, setAlbumSongs] = useState([]);
-//   const [recommended, setRecommended] = useState([]);
-//   const { playSong } = useContext(PlayerContext);
-
-//   useEffect(() => {
-//     const fetchSongs = async () => {
-//       try {
-//         const { data } = await axios.get("http://localhost:9999/public/songs");
-//         setSongs(data);
-
-//         // filter album songs
-//         const albumTracks = data.filter((s) => s.album === albumName);
-//         setAlbumSongs(albumTracks);
-
-//         // recommended: same artist but different albums
-//         if (albumTracks.length > 0) {
-//           const artist = albumTracks[0].artist;
-//           const rec = data.filter(
-//             (s) => s.artist === artist && s.album !== albumName
-//           );
-//           setRecommended(rec.slice(0, 8)); // show max 8
-//         }
-//       } catch (err) {
-//         console.error("Error fetching songs:", err);
-//       }
-//     };
-
-//     fetchSongs();
-//   }, [albumName]);
-
-//   return (
-//     <div className="p-6 md:p-10 text-white">
-//       {/* Album header */}
-//       {albumSongs.length > 0 && (
-//         <div className="flex items-center space-x-6 mb-10">
-//           <img
-//             src={buildImageUrl(albumSongs[0].coverArtPath)}
-//             alt={albumName}
-//             className="w-48 h-48 object-cover rounded-lg shadow-lg"
-//           />
-//           <div>
-//             <h1 className="text-5xl font-bold">{albumName}</h1>
-//             <p className="text-xl text-gray-400 mt-2">
-//               By <span className="font-semibold">{albumSongs[0].artist}</span>
-//             </p>
-//             <p className="text-gray-400 mt-1">
-//               {albumSongs.length} songs in this album
-//             </p>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Album Songs */}
-//       <h2 className="text-2xl font-bold mb-4">Songs</h2>
-//       <ul className="space-y-4">
-//         {albumSongs.map((song) => (
-//           <li
-//             key={song._id}
-//             className="flex items-center justify-between bg-gray-800/50 p-4 rounded-lg hover:bg-gray-700/80 transition"
-//           >
-//             <div>
-//               <p className="font-semibold">{song.title}</p>
-//               <p className="text-sm text-gray-400">{song.artist}</p>
-//             </div>
-//             <button
-//               onClick={() => playSong(song, albumSongs)}
-//               className="bg-green-500 text-white p-3 rounded-full hover:scale-110 transition"
-//             >
-//               <FaPlay />
-//             </button>
-//           </li>
-//         ))}
-//       </ul>
-
-//       {/* Recommended Songs */}
-//       {recommended.length > 0 && (
-//         <div className="mt-12">
-//           <h2 className="text-2xl font-bold mb-4">Recommended for you</h2>
-//           <div className="flex space-x-6 overflow-x-auto no-scrollbar">
-//             {recommended.map((song) => (
-//               <div key={song._id} className="flex-shrink-0 w-40">
-//                 <Link to={`/dashboard/album/${song.album}`}>
-//                   <img
-//                     src={buildImageUrl(song.coverArtPath)}
-//                     alt={song.title}
-//                     className="w-40 h-40 object-cover rounded-lg shadow-md"
-//                   />
-//                 </Link>
-//                 <p className="mt-2 font-semibold truncate">{song.title}</p>
-//                 <p className="text-sm text-gray-400 truncate">{song.album}</p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default AlbumDetailPage;
-
 
 
 import React, { useEffect, useState, useContext } from "react";
@@ -129,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const buildImageUrl = (path) => {
   if (!path) return "https://via.placeholder.com/160";
   if (path.startsWith("http")) return path;
-  return `http://localhost:9999/${path.replace(/\\/g, "/")}`;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 const AlbumDetailPage = () => {
@@ -147,7 +31,7 @@ const AlbumDetailPage = () => {
     const fetchSongs = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get("http://localhost:9999/public/songs");
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/public/songs`);
         setSongs(data);
 
         // filter album songs

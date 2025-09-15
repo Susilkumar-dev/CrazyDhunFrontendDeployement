@@ -18,7 +18,7 @@ const SignInPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const { data } = await axios.post('http://localhost:9999/public/login', { email, password });
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/public/login`, { email, password });
             localStorage.setItem('userInfo', JSON.stringify(data.userDetails));
             navigate("/dashboard");
         } catch (err) {

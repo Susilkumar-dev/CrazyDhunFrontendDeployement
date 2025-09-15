@@ -14,7 +14,7 @@ import { useTheme } from '../../../../../context/ThemeContext';
 const buildImageUrl = (path) => {
   if (!path) return 'https://via.placeholder.com/160';
   if (path.startsWith('http')) return path;
-  return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`;
 };
 
 const PlaylistDetailPage = () => {
@@ -29,7 +29,7 @@ const PlaylistDetailPage = () => {
       try {
         const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const { data } = await axios.get(`http://localhost:9999/user/playlists/${id}`, config);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/user/playlists/${id}`, config);
         setPlaylist(data);
       } catch (error) {
         console.error("Failed to fetch playlist details", error);

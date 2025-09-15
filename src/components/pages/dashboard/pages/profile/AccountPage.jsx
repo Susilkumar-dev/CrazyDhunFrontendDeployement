@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 const buildImageUrl = (path, version = null) => {
   if (!path) return "https://via.placeholder.com/200";
   if (path.startsWith("http")) return version ? `${path}?v=${version}` : path;
-  return `http://localhost:9999/${path.replace(/\\/g, "/")}${version ? `?v=${version}` : ''}`;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, "/")}${version ? `?v=${version}` : ''}`;
 };
 
 // --- Main Account Page Component ---
@@ -35,9 +35,10 @@ const AccountPage = () => {
         if (!token) { navigate("/signin"); return; }
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const [profileRes, likedRes, playlistsRes] = await Promise.all([
-          axios.get("http://localhost:9999/user/profile", config),
-          axios.get("http://localhost:9999/user/liked-songs", config),
-          axios.get("http://localhost:9999/user/playlists", config),
+          axios.get(`${import.meta.env.VITE_API_URL}/user/liked-songs`, config),
+          axios.get(`${import.meta.env.VITE_API_URL}/user/playlists`, config),
+          axios.get(`${import.meta.env.VITE_API_URL}/user/profile`, config),
+          
         ]);
         setProfile(profileRes.data);
         setLikedSongs(likedRes.data);
@@ -392,7 +393,7 @@ const UploadModal = ({ closeModal, setProfile, isDarkMode }) => {
       const imageUrl = cloudinaryRes.data.secure_url;
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await axios.put("http://localhost:9999/user/profile/picture", { imageUrl }, config);
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/user/profile/picture`, { imageUrl }, config);
       setProfile(data);
       closeModal();
     } catch (err) {
@@ -466,7 +467,7 @@ const EditProfileModal = ({ closeModal, currentProfile, setProfile, isDarkMode }
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await axios.put("http://localhost:9999/user/profile/update", { username, bio }, config);
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/user/profile/update", { username, bio }`, config);
       setProfile(data);
       closeModal();
     } catch (err) {

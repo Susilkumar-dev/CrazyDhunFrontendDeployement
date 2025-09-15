@@ -25,7 +25,7 @@ const SignUpPage = () => {
         setError('');
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:9999/public/register', { username, email, password });
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/public/register`, { username, email, password });
             console.log(data.message);
             navigate('/verify-otp', { state: { email: email } });
         } catch (err) {

@@ -12,7 +12,7 @@ export const PlayerContext = createContext();
 const buildSongUrl = (path) => {
   if (!path) return null; // Return null instead of empty string
   if (path.startsWith("http")) return path;
-  return `http://localhost:9999/${path.replace(/\\/g, "/")}`;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 export const PlayerProvider = ({ children }) => {
@@ -45,8 +45,8 @@ export const PlayerProvider = ({ children }) => {
 
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [likedRes, playlistsRes] = await Promise.all([
-        axios.get("http://localhost:9999/user/liked-songs", config),
-        axios.get("http://localhost:9999/user/playlists", config),
+        axios.get(`${import.meta.env.VITE_API_URL}/user/liked-songs`, config),
+        axios.get(`${import.meta.env.VITE_API_URL}/user/playlists`, config),
       ]);
 
       setLikedSongs(new Set(likedRes.data.map((song) => song._id)));
@@ -68,7 +68,7 @@ export const PlayerProvider = ({ children }) => {
 
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.post(
-        `http://localhost:9999/user/like-song/${songId}`,
+        `${import.meta.env.VITE_API_URL}/user/like-song/${songId}`,
         {},
         config
       );
@@ -89,7 +89,7 @@ export const PlayerProvider = ({ children }) => {
 
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.delete(
-        `http://localhost:9999/user/unlike-song/${songId}`,
+        `${import.meta.env.VITE_API_URL}/user/unlike-song/${songId}`,
         config
       );
 
@@ -113,7 +113,7 @@ export const PlayerProvider = ({ children }) => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       await axios.post(
-        "http://localhost:9999/user/playlists/add-song",
+        `${import.meta.env.VITE_API_URL}/user/playlists/add-song`,
         { playlistId, songId },
         config
       );
@@ -146,7 +146,7 @@ export const PlayerProvider = ({ children }) => {
   const fetchRecommendations = async (songId) => {
     try {
       const { data: recommendations } = await axios.get(
-        `http://localhost:9999/public/songs/recommend/${songId}`
+        `${import.meta.env.VITE_API_URL}/public/songs/recommend/${songId}`
       );
 
       setSongQueue((prevQueue) => {

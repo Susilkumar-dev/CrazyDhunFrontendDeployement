@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const buildImageUrl = (path) => {
     if (!path) return 'https://via.placeholder.com/160';
     if (path.startsWith('http')) return path;
-    return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+    return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`;
 };
 
 // Function to generate a gradient based on playlist name
@@ -55,7 +55,7 @@ const PlaylistsPage = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:9999/user/playlists', config);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/user/playlists`, config);
             setPlaylists(data);
             setFilteredPlaylists(data);
         } catch (error) { 
@@ -105,7 +105,7 @@ const PlaylistsPage = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.post('http://localhost:9999/user/playlists', { name: newPlaylistName }, config);
+            await axios.post(`${import.meta.env.VITE_API_URL}/user/playlists, { name: newPlaylistName }`, config );
             setIsModalOpen(false); 
             setNewPlaylistName("");
             fetchPlaylists();
@@ -120,7 +120,7 @@ const PlaylistsPage = () => {
         try {
             const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:9999/user/playlists/${editingPlaylist._id}`, 
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/playlists/${editingPlaylist._id}`, 
                 { name: newPlaylistName }, config);
             setIsEditModalOpen(false); 
             setNewPlaylistName("");
@@ -136,7 +136,7 @@ const PlaylistsPage = () => {
         try {
              const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
              const config = { headers: { Authorization: `Bearer ${token}` } };
-             const { data: playlistDetails } = await axios.get(`http://localhost:9999/user/playlists/${playlistId}`, config);
+             const { data: playlistDetails } = await axios.get(`${import.meta.env.VITE_API_URL}/user/playlists/${playlistId}`, config);
              if (playlistDetails.songs.length > 0) {
                  playSong(playlistDetails.songs[0], playlistDetails.songs, {type: 'Playlist', name: playlistDetails.name});
              } else { 
@@ -151,7 +151,7 @@ const PlaylistsPage = () => {
         try {
              const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
              const config = { headers: { Authorization: `Bearer ${token}` } };
-             const { data: playlistDetails } = await axios.get(`http://localhost:9999/user/playlists/${playlistId}`, config);
+             const { data: playlistDetails } = await axios.get(`${import.meta.env.VITE_API_URL}/user/playlists/${playlistId}`, config);
              if (playlistDetails.songs.length > 0) {
                  // Shuffle the songs array
                  const shuffledSongs = [...playlistDetails.songs].sort(() => Math.random() - 0.5);
@@ -169,7 +169,7 @@ const PlaylistsPage = () => {
             try {
                 const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:9999/user/playlists/${playlistId}`, config);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/user/playlists/${playlistId}`, config);
                 setPlaylists(playlists.filter(p => p._id !== playlistId));
                 fetchUserPlaylists();
             } catch (error) { 

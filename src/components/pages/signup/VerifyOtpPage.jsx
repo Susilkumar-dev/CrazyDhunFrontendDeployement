@@ -19,7 +19,7 @@ const VerifyOtpPage = () => {
         }
         try {
             // Send the email and OTP to the backend for verification
-            const { data } = await axios.post('http://localhost:9999/public/verify-otp', { email, otp });
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/public/verify-otp`, { email, otp });
             
             // On success, store the returned user object and token in localStorage
             localStorage.setItem('userInfo', JSON.stringify(data));

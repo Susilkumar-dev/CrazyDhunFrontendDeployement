@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const buildImageUrl = (path) => {
   if (!path) return "https://via.placeholder.com/160";
   if (path.startsWith("http")) return path;
-  return `http://localhost:9999/${path.replace(/\\/g, "/")}`;
+  return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, "/")}`;
 };
 
 const LibraryPage = () => {
@@ -25,7 +25,7 @@ const LibraryPage = () => {
   const likedSongsList = allSongs.filter((song) => likedSongIds?.has(song._id));
   
   // Safely get recently played songs
-  const recentlyPlayedSongs = allSongs.filter(song => 
+  const recentlyPlayedSongs = allSongs.filter(song =>
     Array.isArray(recentlyPlayed) && recentlyPlayed.some(rp => rp && rp.songId === song._id)
   ).sort((a, b) => {
     const aIndex = recentlyPlayed.findIndex(rp => rp && rp.songId === a._id);
@@ -49,7 +49,7 @@ const LibraryPage = () => {
   useEffect(() => {
     const fetchAllSongs = async () => {
       try {
-        const { data } = await axios.get("http://localhost:9999/public/songs");
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/public/songs`);
         setAllSongs(data);
       } catch (error) {
         console.error("Failed to fetch library data:", error);
@@ -97,7 +97,7 @@ const LibraryPage = () => {
   return (
     <div className={`p-6 md:p-10 min-h-screen bg-gradient-to-b ${isDarkMode ? 'from-gray-900 via-gray-800 to-gray-900' : 'from-gray-100 via-gray-50 to-gray-100'} ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
       {/* Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8"
@@ -139,7 +139,7 @@ const LibraryPage = () => {
           >
             {tab}
             {activeTab === tab && (
-              <motion.div 
+              <motion.div
                 className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r rounded-t-lg ${isDarkMode ? 'from-green-400 to-emerald-500' : 'from-green-500 to-emerald-600'}`}
                 layoutId="activeTab"
               />
@@ -217,9 +217,9 @@ const RecentlyPlayed = ({ songs, playContext, queue, isDarkMode }) => {
             <div className={`absolute top-4 right-4 rounded-full p-2 ${isDarkMode ? 'bg-black/70' : 'bg-white/90'}`}>
               <FaClock className="text-green-400" />
             </div>
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
+            {/* <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
               <FaPlay className="text-green-400 text-3xl drop-shadow-lg" />
-            </div>
+            </div> */}
             <h3 className="text-lg font-bold truncate">{song.title}</h3>
             <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{song.artist}</p>
           </motion.div>
@@ -250,9 +250,9 @@ const RecentlyPlayed = ({ songs, playContext, queue, isDarkMode }) => {
                   alt={song.title}
                   className="w-full h-44 object-cover rounded-xl mb-4"
                 />
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
+                {/* <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
                   <FaPlay className="text-green-400 text-3xl drop-shadow-lg" />
-                </div>
+                </div> */}
                 <h3 className="text-lg font-bold truncate">{song.title}</h3>
                 <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{song.artist}</p>
               </motion.div>
@@ -290,9 +290,9 @@ const SongList = ({ songs, playContext, queue, isDarkMode }) => {
             alt={song.title}
             className="w-full h-44 object-cover rounded-xl mb-4"
           />
-          <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
+          {/* <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-xl ${isDarkMode ? 'bg-black/40' : 'bg-white/70'}`}>
             <FaPlay className="text-green-400 text-3xl drop-shadow-lg" />
-          </div>
+          </div> */}
           <h3 className="text-lg font-bold truncate">{song.title}</h3>
           <p className={`text-sm truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{song.artist}</p>
         </motion.div>
@@ -328,7 +328,7 @@ const AlbumArtistList = ({ data, type, redirectBase, isDarkMode }) => {
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
       {entries.map(([name, item], index) => {
         // For artists, use a placeholder image instead of song cover
-        const imageUrl = type === "Artist" 
+        const imageUrl = type === "Artist"
           ? `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=160`
           : buildImageUrl(item.cover);
           
@@ -350,9 +350,9 @@ const AlbumArtistList = ({ data, type, redirectBase, isDarkMode }) => {
                   className={`object-cover shadow-lg ${type === "Artist" ? "w-full h-full rounded-full border-2 border-green-500" : "w-full h-full rounded-xl"}`}
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 rounded-full">
-                  <button className="bg-green-500 p-3 rounded-full text-white hover:scale-110 transition-transform">
+                  {/* <button className="bg-green-500 p-3 rounded-full text-white hover:scale-110 transition-transform">
                     <FaPlay />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <h3 className="font-bold truncate w-36">{name}</h3>

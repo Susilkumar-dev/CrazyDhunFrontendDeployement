@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 const buildImageUrl = (path) => {
     if (!path) return 'https://via.placeholder.com/160';
     if (path.startsWith('http')) return path;
-    return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+    return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`;
 };
 
 // --- Main Search Page Component ---
@@ -27,7 +27,7 @@ const SearchPage = () => {
     useEffect(() => {
         const initialLoad = async () => {
             try {
-                const { data } = await axios.get('http://localhost:9999/public/songs');
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/public/songs`);
                 setAllSongs(data);
                 const storedHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
                 setSearchHistory(storedHistory);

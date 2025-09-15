@@ -13,7 +13,7 @@ const buildImageUrl = (path) =>
   path
     ? path.startsWith('http')
       ? path
-      : `http://localhost:9999/${path.replace(/\\/g, '/')}`
+      : `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`
     : 'https://via.placeholder.com/160';
 
 // --- Main Page Component ---
@@ -35,7 +35,7 @@ const AdminApprovalPage = () => {
       const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const { data } = await axios.get(
-        'http://localhost:9999/admin/songs/pending',
+        `${import.meta.env.VITE_API_URL}/admin/songs/pending`,
         config
       );
       setPendingSongs(data);
@@ -85,7 +85,7 @@ const AdminApprovalPage = () => {
       const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.post(
-        `http://localhost:9999/admin/songs/approve/${id}`,
+        `${import.meta.env.VITE_API_URL}/admin/songs/approve/${id}`,
         {},
         config
       );
@@ -102,7 +102,7 @@ const AdminApprovalPage = () => {
       const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.delete(
-        `http://localhost:9999/admin/songs/reject/${id}`,
+        `${import.meta.env.VITE_API_URL}/admin/songs/reject/${id}`,
         config
       );
       setPendingSongs((currentSongs) =>
@@ -139,7 +139,7 @@ const AdminApprovalPage = () => {
         
         for (const song of filteredSongs) {
           await axios.post(
-            `http://localhost:9999/admin/songs/approve/${song._id}`,
+            `${import.meta.env.VITE_API_URL}/admin/songs/approve/${song._id}`,
             {},
             config
           );

@@ -11,7 +11,7 @@ import SignInPage from "../pages/signin/SignInPage";
 import SignUpPage from "../pages/signup/SignUpPage";
 import VerifyOtpPage from "../pages/signup/VerifyOtpPage";
 import MusicHome from "../pages/dashboard/pages/defaultDashBoard/MusicHome";
-import AddSongPage from "../pages/dashboard/pages/addsong/AddSong";
+import AddSongPage from "../pages/dashboard/pages/addsong/AddSongPage";
 import AdminApprovalPage from "../pages/dashboard/pages/admin/AdminApprovalPage";
 import AdminUploadSongPage from "../pages/dashboard/pages/admin/AdminUploadSongPage";
 import Exp from "../pages/dashboard/pages/explore/Exp";
@@ -23,7 +23,9 @@ import AccountPage from "../pages/dashboard/pages/profile/AccountPage";
 import PlaylistDetailPage from "../pages/dashboard/pages/playlist/PlaylistDetailPage";
 import ArtistDetailPage from "../pages/dashboard/pages/Artist/ArtistDetailPage";
 import AlbumDetailPage from "../pages/Album/AlbumDetailPage";
+import AdminAlbumManager from "../pages/dashboard/pages/admin/AdminAlbumManager";
 import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
+// import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
 
 const MainLayout = () => (
     <>
@@ -144,6 +146,12 @@ const AllRoutes = () => {
                                     path: "approvals", 
                                     element: <AdminApprovalPage /> 
                                 },
+                                { 
+                                 path: "manage-songs", 
+                                 element: <AdminAlbumManager /> 
+                                }
+                                
+                                
                             ]
                         }
                     ],

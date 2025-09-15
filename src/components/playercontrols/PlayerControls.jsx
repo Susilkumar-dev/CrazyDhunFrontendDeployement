@@ -185,7 +185,7 @@ const PlayerControls = ({ onPlayerOpen }) => {
   const buildImageUrl = (path) => {
     if (!path) return 'https://via.placeholder.com/160';
     if (path.startsWith('http')) return path;
-    return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+    return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`;
   };
 
   if (!currentSong) return null;

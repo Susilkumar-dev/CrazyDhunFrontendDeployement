@@ -1,8 +1,6 @@
 
 
 
-
-// components/dashboard/DashboardLayout.js (updated with theme)
 import React, { useState } from 'react';
 import { Outlet } from "react-router-dom";
 import DashBoard from "./DashBoard";
@@ -17,7 +15,7 @@ const DashboardLayout = () => {
     <div className="relative min-h-screen text-white transition-colors duration-300">
       <DashBoard /> 
       
-      <main className="ml-0 md:ml-64 p-6 pt-24 md:pt-6 pb-48 md:pb-28">
+      <main className="ml-0 md:ml-64 p-6 pt-24 md:pt-6 pb-48 md:pb-28 relative z-10">
         <Outlet /> 
       </main>
       

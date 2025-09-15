@@ -2,7 +2,7 @@
 
 
 
-// components/dashboard/DashBoard.js (updated with responsive design and theme)
+
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { 
@@ -102,13 +102,19 @@ const DashBoard = () => {
                             <FaCheck className="mr-4" />
                             <span>Approvals</span>
                         </NavLink>
+                        <NavLink to="/dashboard/manage-songs" className={({ isActive }) => linkClasses(isActive)}>
+                            <FaMusic className="mr-4" />
+                            <span>Manage Songs</span>
+                        </NavLink>
                     </>
                 ) : (
                     // REGULAR USER VIEW
-                    <NavLink to="/dashboard/add-song" className={({ isActive }) => linkClasses(isActive)}>
+                        <NavLink to="/dashboard/add-song" className={({ isActive }) => linkClasses(isActive)}>
                         <FaPlus className="mr-4" />
                         <span>Request Song</span>
-                    </NavLink>
+                        </NavLink>
+                        
+                        
                 )}
             </nav>
 
@@ -128,7 +134,7 @@ const DashBoard = () => {
 
     return (
         <>
-            <header className={`md:hidden p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-40 border-b ${
+            <header className={`md:hidden p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-50 border-b ${
                 isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
             }`}>
                 <Link to="/dashboard" className={`flex items-center ${isDarkMode ? "text-white" : "text-gray-900"}`}>
@@ -143,13 +149,13 @@ const DashBoard = () => {
                 </button>
             </header>
 
-            <div className={`md:hidden fixed top-0 left-0 h-full w-64 p-4 flex flex-col transition-transform duration-300 ease-in-out transform ${
+            <div className={`md:hidden fixed top-0 left-0 h-full w-64 p-4 flex flex-col transition-transform duration-300 ease-in-out transform z-40 ${
                 isDarkMode ? "bg-gray-800 border-r border-gray-700" : "bg-white border-r border-gray-200"
             } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{paddingTop: '5rem'}}>
                 {sidebarContent}
             </div>
 
-            <div className={`hidden md:flex w-64 h-screen fixed top-0 left-0 p-4 flex-col ${
+            <div className={`hidden md:flex w-64 h-screen fixed top-0 left-0 p-4 flex-col z-30 ${
                 isDarkMode ? "bg-gray-800 border-r border-gray-700" : "bg-white border-r border-gray-200"
             }`}>
                 <h1 className={`font-bold text-2xl px-3 mb-6 flex items-center ${

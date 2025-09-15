@@ -100,7 +100,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const buildImageUrl = (path) => {
     if (!path) return 'https://via.placeholder.com/160';
     if (path.startsWith('http')) return path;
-    return `http://localhost:9999/${path.replace(/\\/g, '/')}`;
+    return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, '/')}`;
 };
 
 const ArtistDetailPage = () => {
@@ -118,7 +118,7 @@ const ArtistDetailPage = () => {
         const fetchArtistSongs = async () => {
             try {
                 setLoading(true);
-                const { data } = await axios.get(`http://localhost:9999/public/songs/artist/${encodeURIComponent(artistName)}`);
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/public/songs/artist/${encodeURIComponent(artistName)}`);
                 setArtistSongs(data);
                 
                 // Group songs by album

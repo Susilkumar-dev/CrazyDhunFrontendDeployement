@@ -1,8 +1,4 @@
 
-
-
-
-
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -69,7 +65,7 @@ const AdminAddSongByUrlPage = () => {
       const token = JSON.parse(localStorage.getItem('userInfo'))?.token;
       if (!token) { navigate('/signin'); return; }
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await axios.post('http://localhost:9999/admin/songs/add-by-url', songData, config);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/admin/songs/add-by-url`, songData, config);
       setMessage(`✅ Success! '${data.title}' was added.`);
       setTitle(''); setArtist(''); setAlbum(''); setFilePath(''); setCoverArtPath(''); setArtistPic('');
     } catch (err) {
