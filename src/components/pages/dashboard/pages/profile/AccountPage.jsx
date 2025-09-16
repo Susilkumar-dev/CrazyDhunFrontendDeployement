@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect, useContext } from "react";
 import { FaSignOutAlt, FaCamera, FaPlay, FaEdit, FaUser, FaHeart, FaList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +21,7 @@ const AccountPage = () => {
   const [playlists, setPlaylists] = useState([]);
   const [isPicModalOpen, setIsPicModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [imageVersion, setImageVersion] = useState(0); // To force image reload
+  const [imageVersion, setImageVersion] = useState(0);
   const { playSong } = useContext(PlayerContext);
   const { isDarkMode } = useTheme();
 
@@ -34,18 +31,18 @@ const AccountPage = () => {
         const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
         if (!token) { navigate("/signin"); return; }
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const [profileRes, likedRes, playlistsRes] = await Promise.all([
+        const [likedRes, playlistsRes, profileRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_API_URL}/user/liked-songs`, config),
           axios.get(`${import.meta.env.VITE_API_URL}/user/playlists`, config),
           axios.get(`${import.meta.env.VITE_API_URL}/user/profile`, config),
-          
         ]);
         setProfile(profileRes.data);
         setLikedSongs(likedRes.data);
         setPlaylists(playlistsRes.data);
       } catch (error) {
         console.error("Failed to get profile data:", error);
-        localStorage.removeItem("userInfo"); navigate("/signin");
+        localStorage.removeItem("userInfo");
+        navigate("/signin");
       }
     };
     fetchData();
@@ -58,7 +55,6 @@ const AccountPage = () => {
 
   const handleProfileUpdate = (updatedProfile) => {
     setProfile(updatedProfile);
-    // Force image reload by updating the version
     setImageVersion(prev => prev + 1);
   };
 
@@ -117,9 +113,9 @@ const AccountPage = () => {
             imageVersion={imageVersion}
           />
           <div className="flex-1 text-center md:text-left space-y-3">
-            <h2 className={`text-4xl md:text-5xl font-extrabold ${
-              isDarkMode ? 'text-cyan-400' : 'text-cyan-600'
-            }`}>{profile.username}</h2>
+            <h2 className={`text-4xl md:text-5xl font-extrabold ${isDarkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
+              {profile.username}
+            </h2>
             <p className={`text-md italic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {profile.bio || "No bio yet. Add one to personalize your profile!"}
             </p>
@@ -150,9 +146,9 @@ const AccountPage = () => {
           </h3>
           {likedSongs.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {likedSongs.slice(0, 10).map((song) => (
+              {likedSongs.slice(0, 10).map((song, index) => (
                 <LikedSongCard 
-                  key={song._id} 
+                  key={song._id || index} 
                   song={song} 
                   onPlay={() => playSong(song, likedSongs)} 
                   isDarkMode={isDarkMode}
@@ -177,9 +173,9 @@ const AccountPage = () => {
           </h3>
           {playlists.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {playlists.slice(0, 3).map((playlist) => (
+              {playlists.slice(0, 3).map((playlist, index) => (
                 <PlaylistCard 
-                  key={playlist._id} 
+                  key={playlist._id || index} 
                   playlist={playlist} 
                   isDarkMode={isDarkMode}
                   onClick={() => navigate(`/dashboard/playlist/${playlist._id}`)}
@@ -227,7 +223,6 @@ const AccountPage = () => {
         />
       )}
 
-      {/* Flower Falling Animation */}
       <style>{`
         @keyframes fall {
           0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
@@ -245,7 +240,6 @@ const AccountPage = () => {
 };
 
 // --- Sub-Components ---
-
 const ProfilePicture = ({ profile, onPictureChange, isDarkMode, imageVersion }) => (
   <div className="relative group w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
     {profile.profilePicture ? (
@@ -269,283 +263,98 @@ const ProfilePicture = ({ profile, onPictureChange, isDarkMode, imageVersion }) 
           boxShadow: isDarkMode ? '0 0 20px rgba(34, 211, 238, 0.6)' : '0 0 20px rgba(8, 145, 178, 0.4)'
         }}
       >
-        <span className="text-5xl font-bold text-white">{profile.username.charAt(0).toUpperCase()}</span>
+        <span className="text-5xl font-bold text-white">{profile?.username?.charAt(0).toUpperCase()}</span>
       </div>
     )}
     <button 
       onClick={onPictureChange} 
-      className={`absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity ${
-        isDarkMode ? 'bg-black/70' : 'bg-black/50'
-      }`}
+      className="absolute bottom-0 right-0 bg-cyan-500 hover:bg-cyan-600 p-2 rounded-full text-white text-lg"
     >
-      <FaCamera 
-        size={32} 
-        className="text-cyan-400 drop-shadow-lg" 
-      />
+      <FaCamera />
     </button>
   </div>
 );
 
 const Stat = ({ value, label, isDarkMode, icon }) => (
-  <div className={`p-6 rounded-xl border ${
+  <div className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 ${
     isDarkMode 
-      ? 'bg-gray-800/50 border-cyan-500/30 shadow-cyan-500/10' 
-      : 'bg-white/80 border-cyan-400/30 shadow-cyan-400/10'
+      ? 'border-cyan-500/40 bg-gray-800/50' 
+      : 'border-cyan-400/40 bg-white/80'
   }`}>
-    <div className={`text-3xl font-bold mb-2 ${
-      isDarkMode ? 'text-cyan-400' : 'text-cyan-600'
-    }`}>
-      {value}
-    </div>
-    <div className="flex items-center justify-center gap-2">
-      <span className={`${isDarkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
-        {icon}
-      </span>
-      <span className={`text-sm uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-        {label}
-      </span>
-    </div>
+    <div className="text-2xl">{icon}</div>
+    <div className="text-xl font-bold">{value}</div>
+    <div className="text-sm">{label}</div>
   </div>
 );
 
+// --- Liked Song Card ---
 const LikedSongCard = ({ song, onPlay, isDarkMode }) => (
-  <motion.div 
-    whileHover={{ y: -6, scale: 1.05 }} 
-    className="group relative cursor-pointer"
-    onClick={onPlay}
-  >
-    <img 
-      src={buildImageUrl(song.coverArtPath)} 
-      className="w-full aspect-square object-cover rounded-lg shadow-lg transition-all duration-300" 
-      alt={song.title} 
-      style={{
-        boxShadow: isDarkMode 
-          ? '0 0 0 rgba(34, 211, 238, 0)' 
-          : '0 0 0 rgba(8, 145, 178, 0)'
-      }}
-    />
-    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg ${
-      isDarkMode ? 'bg-black/60' : 'bg-black/40'
-    }`}>
-      <FaPlay className="text-cyan-400 text-5xl drop-shadow-lg" />
-    </div>
-    <p className={`font-semibold mt-2 truncate ${isDarkMode ? 'text-cyan-300' : 'text-cyan-700'}`}>
-      {song.title}
-    </p>
-    <p className={`text-sm truncate ${isDarkMode ? 'text-purple-300' : 'text-purple-600'}`}>
-      {song.artist}
-    </p>
-  </motion.div>
+  <div className={`p-4 rounded-lg cursor-pointer transition-transform hover:scale-105 ${
+    isDarkMode ? 'bg-gray-800/50 border border-cyan-500/20' : 'bg-white/80 border border-cyan-400/20'
+  }`} onClick={onPlay}>
+    <img src={song.cover || 'https://via.placeholder.com/150'} alt={song.title} className="w-full h-32 object-cover rounded-md mb-2" />
+    <p className="font-semibold">{song.title}</p>
+    <p className="text-sm text-gray-400">{song.artist}</p>
+  </div>
 );
 
+// --- Playlist Card ---
 const PlaylistCard = ({ playlist, isDarkMode, onClick }) => (
-  <motion.div 
-    whileHover={{ y: -4 }} 
-    className={`p-4 rounded-xl cursor-pointer ${
-      isDarkMode 
-        ? 'bg-gray-800/50 hover:bg-gray-700/50 border border-cyan-500/20' 
-        : 'bg-white/80 hover:bg-white border border-cyan-400/20'
-    }`}
-    onClick={onClick}
-  >
-    <div className="relative">
-      {playlist.coverArt ? (
-        <img 
-          src={buildImageUrl(playlist.coverArt)} 
-          alt={playlist.name} 
-          className="w-full h-40 object-cover rounded-lg mb-3"
-        />
-      ) : (
-        <div className={`w-full h-40 rounded-lg mb-3 flex items-center justify-center ${
-          isDarkMode ? 'bg-gradient-to-br from-cyan-700 to-purple-800' : 'bg-gradient-to-br from-cyan-500 to-purple-400'
-        }`}>
-          <FaList className="text-3xl text-white" />
-        </div>
-      )}
-    </div>
-    <h4 className={`font-bold truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-      {playlist.name}
-    </h4>
-    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-      {playlist.songs?.length || 0} songs
-    </p>
-  </motion.div>
+  <div onClick={onClick} className={`p-4 rounded-lg cursor-pointer transition-transform hover:scale-105 ${
+    isDarkMode ? 'bg-gray-800/50 border border-cyan-500/20' : 'bg-white/80 border border-cyan-400/20'
+  }`}>
+    <h4 className="font-bold mb-2">{playlist.name}</h4>
+    <p className="text-sm text-gray-400">{playlist.songs?.length || 0} songs</p>
+  </div>
 );
-
-// --- Upload Modal ---
-const UploadModal = ({ closeModal, setProfile, isDarkMode }) => {
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-  const handleUpload = async () => {
-    if (!file) return;
-    if (!cloudName || !uploadPreset) { setError("Cloudinary config missing"); return; }
-    setLoading(true); setError("");
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", uploadPreset);
-      const cloudinaryEndpoint = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-      const cloudinaryRes = await axios.post(cloudinaryEndpoint, formData);
-      const imageUrl = cloudinaryRes.data.secure_url;
-      const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/user/profile/picture`, { imageUrl }, config);
-      setProfile(data);
-      closeModal();
-    } catch (err) {
-      setError(err.response?.data?.error?.message || "Upload failed.");
-    } finally { setLoading(false); }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        className={`p-8 rounded-lg shadow-lg w-full max-w-sm ${
-          isDarkMode 
-            ? 'bg-gray-800 border border-cyan-500/40' 
-            : 'bg-white border border-cyan-400/40'
-        }`}
-      >
-        <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
-          Update Profile Picture
-        </h2>
-        {error && <p className="text-red-400 mb-4 text-sm">{error}</p>}
-        <input 
-          type="file" 
-          accept="image/jpeg,image/png" 
-          onChange={(e) => setFile(e.target.files[0])} 
-          className={`w-full mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'} file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold ${
-            isDarkMode 
-              ? 'file:bg-cyan-600 file:text-white hover:file:bg-cyan-500' 
-              : 'file:bg-cyan-500 file:text-white hover:file:bg-cyan-400'
-          }`} 
-        />
-        <div className="flex justify-end space-x-4 mt-4">
-          <button 
-            onClick={closeModal} 
-            className={`px-6 py-2 rounded-full font-semibold ${
-              isDarkMode 
-                ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                : 'bg-gray-300 hover:bg-gray-400 text-gray-900'
-            }`}
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={handleUpload} 
-            disabled={loading || !file} 
-            className={`px-6 py-2 rounded-full font-semibold ${
-              isDarkMode 
-                ? 'bg-cyan-600 hover:bg-cyan-500 text-white disabled:bg-gray-600' 
-                : 'bg-cyan-500 hover:bg-cyan-400 text-white disabled:bg-gray-300'
-            }`}
-          >
-            {loading ? "Uploading..." : "Upload"}
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
 
 // --- Edit Profile Modal ---
 const EditProfileModal = ({ closeModal, currentProfile, setProfile, isDarkMode }) => {
   const [username, setUsername] = useState(currentProfile.username);
   const [bio, setBio] = useState(currentProfile.bio || "");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSave = async () => {
-    setLoading(true);
-    setError("");
     try {
       const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/user/profile/update", { username, bio }`, config);
+      const { data } = await axios.put(
+        `${import.meta.env.VITE_API_URL}/user/profile/update`,
+        { username, bio },
+        config
+      );
       setProfile(data);
       closeModal();
     } catch (err) {
-      setError(err.response?.data?.message || "Update failed.");
-    } finally { setLoading(false); }
+      console.error(err);
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }} 
-        animate={{ opacity: 1, scale: 1 }} 
-        className={`p-8 rounded-lg shadow-lg w-full max-w-md ${
-          isDarkMode 
-            ? 'bg-gray-800 border border-purple-500/40' 
-            : 'bg-white border border-purple-400/40'
-        }`}
-      >
-        <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
-          Edit Profile
-        </h2>
-        {error && <p className="text-red-400 mb-4 text-sm">{error}</p>}
-        <div className="mb-4">
-          <label className={`block mb-2 text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Username
-          </label>
-          <input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-            className={`w-full p-3 rounded focus:outline-none focus:ring-2 ${
-              isDarkMode 
-                ? 'bg-gray-700 text-white focus:ring-purple-500' 
-                : 'bg-gray-100 text-gray-900 focus:ring-purple-400'
-            }`} 
-          />
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className={`bg-white p-6 rounded-xl w-96 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+        <h3 className="text-xl font-bold mb-4">Edit Profile</h3>
+        <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" className="w-full p-2 rounded mb-2 text-black"/>
+        <textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Bio" className="w-full p-2 rounded mb-4 text-black"/>
+        <div className="flex justify-end gap-3">
+          <button onClick={closeModal} className="px-4 py-2 rounded bg-gray-500 text-white">Cancel</button>
+          <button onClick={handleSave} className="px-4 py-2 rounded bg-cyan-500 text-white">Save</button>
         </div>
-        <div className="mb-6">
-          <label className={`block mb-2 text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Bio
-          </label>
-          <textarea 
-            value={bio} 
-            onChange={(e) => setBio(e.target.value)} 
-            className={`w-full p-3 rounded h-24 resize-none focus:outline-none focus:ring-2 ${
-              isDarkMode 
-                ? 'bg-gray-700 text-white focus:ring-purple-500' 
-                : 'bg-gray-100 text-gray-900 focus:ring-purple-400'
-            }`} 
-            placeholder="Tell everyone a little about yourself..." 
-          />
-        </div>
-        <div className="flex justify-end space-x-4 mt-4">
-          <button 
-            onClick={closeModal} 
-            className={`px-6 py-2 rounded-full font-semibold ${
-              isDarkMode 
-                ? 'bg-gray-600 hover:bg-gray-500 text-white' 
-                : 'bg-gray-300 hover:bg-gray-400 text-gray-900'
-            }`}
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={handleSave} 
-            disabled={loading} 
-            className={`px-6 py-2 rounded-full font-semibold ${
-              isDarkMode 
-                ? 'bg-purple-600 hover:bg-purple-500 text-white disabled:bg-gray-600' 
-                : 'bg-purple-500 hover:bg-purple-400 text-white disabled:bg-gray-300'
-            }`}
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
+
+// --- Upload Modal Placeholder ---
+const UploadModal = ({ closeModal, setProfile, isDarkMode }) => (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+    <div className={`bg-white p-6 rounded-xl w-96 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+      <h3 className="text-xl font-bold mb-4">Upload Profile Picture</h3>
+      <p>Upload logic goes here...</p>
+      <div className="flex justify-end mt-4">
+        <button onClick={closeModal} className="px-4 py-2 rounded bg-cyan-500 text-white">Close</button>
+      </div>
+    </div>
+  </div>
+);
 
 export default AccountPage;
