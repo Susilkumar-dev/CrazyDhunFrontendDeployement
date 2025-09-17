@@ -1,4 +1,7 @@
-import React, { useState, useRef } from 'react';
+
+
+
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -19,6 +22,7 @@ const SongUploadPage = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const { isDarkMode } = useTheme();
+    const [stars, setStars] = useState([]);
 
     // Create refs for file inputs
     const songFileRef = useRef(null);
@@ -26,15 +30,42 @@ const SongUploadPage = () => {
 
     // Language options
     const languageOptions = [
-        'Telugu', 'Hindi', 'English', 'Tamil', 'Kannada', 
+        'Telugu', 'Hindi', 'odia','bhajan','English', 'Tamil', 'Kannada', 
         'Malayalam', 'Bengali', 'Punjabi', 'Marathi', 'Other'
     ];
 
     // Genre options
     const genreOptions = [
-        'Pop', 'Rock', 'Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
+        'Pop', 'Rock','spiritual','bhajan' ,'Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
         'Folk', 'Country', 'Reggae', 'Blues', 'Metal', 'Indie', 'Other'
     ];
+
+    // Create falling stars
+    useEffect(() => {
+        const createStar = () => {
+            const size = Math.random() * 3 + 1;
+            const newStar = {
+                id: Math.random(),
+                left: `${Math.random() * 100}%`,
+                size: size,
+                duration: Math.random() * 5 + 5,
+                delay: Math.random() * 5,
+                opacity: Math.random() * 0.5 + 0.5
+            };
+            setStars(prev => [...prev, newStar]);
+            
+            // Remove star after animation completes
+            setTimeout(() => {
+                setStars(prev => prev.filter(star => star.id !== newStar.id));
+            }, (newStar.duration + newStar.delay) * 1000);
+        };
+
+        // Create stars at intervals
+        const starInterval = setInterval(createStar, 200);
+        
+        // Cleanup
+        return () => clearInterval(starInterval);
+    }, []);
 
     // File validation function
     const validateFiles = () => {
@@ -166,8 +197,8 @@ const SongUploadPage = () => {
             </label>
             <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${
                 isDarkMode
-                    ? 'border-purple-500/30 bg-purple-900/20 hover:border-purple-500/50'
-                    : 'border-purple-400/40 bg-purple-100/50 hover:border-purple-500/60'
+                    ? 'border-purple-500/30 bg-gray-800/40 hover:border-purple-500/50 hover:bg-gray-800/60'
+                    : 'border-purple-400/40 bg-white/80 hover:border-purple-500/60 hover:bg-white'
             } ${file ? (isDarkMode ? 'border-green-500/50' : 'border-green-500/50') : ''}`}>
                 <input
                     id={id}
@@ -198,25 +229,28 @@ const SongUploadPage = () => {
     return (
         <div className={`min-h-screen p-6 md:p-10 relative overflow-hidden ${
             isDarkMode
-                ? 'bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 text-white'
-                : 'bg-gradient-to-br from-gray-100 via-purple-100/20 to-gray-100 text-gray-900'
+                ? 'bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white'
+                : 'bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 text-gray-900'
         }`}>
             
-            {/* Falling Bubbles Background */}
+            {/* Falling Stars Background */}
             <div className="absolute inset-0 overflow-hidden z-0">
-                {Array.from({ length: 15 }).map((_, i) => (
+                {stars.map(star => (
                     <div
-                        key={i}
-                        className="absolute rounded-full opacity-20 animate-float"
+                        key={star.id}
+                        className="absolute rounded-full star"
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            width: `${Math.random() * 40 + 10}px`,
-                            height: `${Math.random() * 40 + 10}px`,
-                            animationDelay: `${Math.random() * 5}s`,
-                            animationDuration: `${Math.random() * 10 + 10}s`,
-                            backgroundColor: isDarkMode
-                                ? `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 100}, ${Math.random() * 100 + 200}, 0.3)`
-                                : `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 100}, ${Math.random() * 100 + 200}, 0.2)`,
+                            left: star.left,
+                            width: `${star.size}px`,
+                            height: `${star.size}px`,
+                            opacity: star.opacity,
+                            animation: `fall ${star.duration}s linear ${star.delay}s infinite, glow 2s ease-in-out ${star.delay}s infinite alternate`,
+                            boxShadow: isDarkMode 
+                                ? '0 0 10px 2px rgba(110, 123, 251, 0.7), 0 0 20px 5px rgba(110, 123, 251, 0.5)'
+                                : '0 0 5px 1px rgba(110, 123, 251, 0.5), 0 0 10px 2px rgba(110, 123, 251, 0.3)',
+                            background: isDarkMode 
+                                ? 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(110, 123, 251,0.6) 100%)' 
+                                : 'radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(110, 123, 251,0.4) 100%)'
                         }}
                     />
                 ))}
@@ -246,8 +280,8 @@ const SongUploadPage = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     className={`max-w-2xl mx-auto rounded-2xl p-8 backdrop-blur-xl border ${
                         isDarkMode
-                            ? 'bg-gray-800/40 border-purple-700/30 shadow-2xl shadow-purple-500/10'
-                            : 'bg-white/70 border-purple-200/50 shadow-2xl shadow-purple-400/10'
+                            ? 'bg-gray-900/40 border-purple-700/30 shadow-2xl shadow-purple-500/10'
+                            : 'bg-white/80 border-purple-200/50 shadow-2xl shadow-purple-400/10'
                     }`}
                 >
                     {message && (
@@ -292,8 +326,8 @@ const SongUploadPage = () => {
                                 onChange={(e) => setTitle(e.target.value)}
                                 className={`w-full p-3 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                     isDarkMode
-                                        ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                        ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                                 }`}
                                 required
                                 disabled={loading}
@@ -309,8 +343,8 @@ const SongUploadPage = () => {
                                 onChange={(e) => setArtist(e.target.value)}
                                 className={`w-full p-3 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                     isDarkMode
-                                        ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                        ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                                 }`}
                                 required
                                 disabled={loading}
@@ -328,8 +362,8 @@ const SongUploadPage = () => {
                             onChange={(e) => setAlbum(e.target.value)}
                             className={`w-full p-3 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                 isDarkMode
-                                    ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                    : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                    ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                    : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                             }`}
                             disabled={loading}
                         />
@@ -349,8 +383,8 @@ const SongUploadPage = () => {
                                     onChange={(e) => setLanguage(e.target.value)}
                                     className={`w-full p-3 pl-10 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                         isDarkMode
-                                            ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                            : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                            ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                            : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                                     }`}
                                     required
                                     disabled={loading}
@@ -375,8 +409,8 @@ const SongUploadPage = () => {
                                     onChange={(e) => setGenre(e.target.value)}
                                     className={`w-full p-3 pl-10 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                         isDarkMode
-                                            ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                            : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                            ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                            : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                                     }`}
                                     required
                                     disabled={loading}
@@ -405,8 +439,8 @@ const SongUploadPage = () => {
                                 placeholder="Separate tags with commas (e.g., romantic,melody,chill)"
                                 className={`w-full p-3 pl-10 rounded-xl focus:ring-2 focus:outline-none transition-all ${
                                     isDarkMode
-                                        ? 'bg-gray-700/50 border border-gray-600/50 focus:ring-purple-500 text-white'
-                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900'
+                                        ? 'bg-gray-800/50 border border-gray-700/50 focus:ring-purple-500 text-white hover:bg-gray-800/70'
+                                        : 'bg-white border border-gray-300 focus:ring-purple-400 text-gray-900 hover:bg-gray-50'
                                 }`}
                                 disabled={loading}
                             />
@@ -445,8 +479,8 @@ const SongUploadPage = () => {
                         disabled={loading}
                         className={`w-full py-4 px-6 rounded-xl font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
                             isDarkMode
-                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50'
-                                : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-400/30 hover:shadow-purple-400/50'
+                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:bg-gradient-to-r hover:from-purple-700 hover:to-blue-700'
+                                : 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-400/30 hover:shadow-purple-400/50 hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600'
                         } disabled:opacity-60 disabled:cursor-not-allowed`}
                     >
                         {loading ? (
@@ -464,18 +498,36 @@ const SongUploadPage = () => {
                 </motion.form>
             </div>
 
-            {/* Bubble Animation CSS */}
+            {/* Star Animation CSS */}
             <style>{`
-                @keyframes float {
+                @keyframes fall {
                     0% {
-                        transform: translateY(100vh) rotate(0deg);
+                        transform: translateY(-20px) rotate(0deg);
+                        opacity: 0.7;
                     }
                     100% {
-                        transform: translateY(-100px) rotate(360deg);
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
                     }
                 }
-                .animate-float {
-                    animation: float linear infinite;
+                
+                @keyframes glow {
+                    0% {
+                        box-shadow: 0 0 5px 2px rgba(110, 123, 251, 0.7), 0 0 10px 5px rgba(110, 123, 251, 0.5);
+                    }
+                    100% {
+                        box-shadow: 0 0 15px 4px rgba(110, 123, 251, 0.9), 0 0 25px 10px rgba(110, 123, 251, 0.7);
+                    }
+                }
+                
+                .star {
+                    animation: fall linear infinite, glow ease-in-out infinite alternate;
+                }
+                
+                @media (max-width: 768px) {
+                    .star {
+                        animation-duration: 8s !important;
+                    }
                 }
             `}</style>
         </div>

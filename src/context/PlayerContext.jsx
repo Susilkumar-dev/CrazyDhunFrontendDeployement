@@ -1,18 +1,65 @@
 
-
-
-// Updated PlayerContext.jsx - Fix the audio src issue
 import React, { createContext, useState, useRef, useEffect } from "react";
 import axios from "axios";
 
+
 // 🎶 Create Context
 export const PlayerContext = createContext();
+
+
 
 // 🎶 Build Song URL (Handles local / cloud paths)
 const buildSongUrl = (path) => {
   if (!path) return null; // Return null instead of empty string
   if (path.startsWith("http")) return path;
   return `${import.meta.env.VITE_API_URL}/${path.replace(/\\/g, "/")}`;
+};
+
+// Helper function to manage recently played songs
+const useRecentlyPlayed = () => {
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  
+  // Load recently played from localStorage on component mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('recentlyPlayed');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Check if data has expired (24 hours)
+        if (parsed.expiry && Date.now() > parsed.expiry) {
+          localStorage.removeItem('recentlyPlayed');
+        } else {
+          setRecentlyPlayed(parsed.value || parsed);
+        }
+      }
+    } catch (error) {
+      console.error('Error reading recently played from localStorage:', error);
+    }
+  }, []);
+
+  // Save to localStorage whenever recentlyPlayed changes
+  useEffect(() => {
+    try {
+      const item = {
+        value: recentlyPlayed,
+        expiry: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+      };
+      localStorage.setItem('recentlyPlayed', JSON.stringify(item));
+    } catch (error) {
+      console.error('Error saving recently played to localStorage:', error);
+    }
+  }, [recentlyPlayed]);
+
+  const addToRecentlyPlayed = (song) => {
+    setRecentlyPlayed(prev => {
+      // Remove duplicates and limit to 50 songs
+      const filtered = prev.filter(item => item.songId !== song._id);
+      const newList = [{ songId: song._id, timestamp: Date.now() }, ...filtered];
+      return newList.slice(0, 50);
+    });
+  };
+
+  return { recentlyPlayed, addToRecentlyPlayed };
 };
 
 export const PlayerProvider = ({ children }) => {
@@ -36,6 +83,9 @@ export const PlayerProvider = ({ children }) => {
   const [queueContext, setQueueContext] = useState({ type: "", name: "" });
   const [isShuffled, setIsShuffled] = useState(false);
   const [repeatMode, setRepeatMode] = useState("off"); // off | all | one
+
+  // Add recently played functionality
+  const { recentlyPlayed, addToRecentlyPlayed } = useRecentlyPlayed();
 
   // 🎶 Fetch initial liked songs & playlists
   const fetchInitialData = async () => {
@@ -182,6 +232,9 @@ export const PlayerProvider = ({ children }) => {
     setIsPlaying(true);
     setQueueContext(context);
 
+    // Add to recently played
+    addToRecentlyPlayed(song);
+
     fetchRecommendations(song._id);
   };
 
@@ -221,6 +274,11 @@ export const PlayerProvider = ({ children }) => {
     setCurrentSongIndex(nextIndex);
     setCurrentSong(songQueue[nextIndex]);
     setIsPlaying(true);
+    
+    // Add to recently played when playing next song
+    if (songQueue[nextIndex]) {
+      addToRecentlyPlayed(songQueue[nextIndex]);
+    }
   };
 
   const playPreviousSong = () => {
@@ -229,6 +287,11 @@ export const PlayerProvider = ({ children }) => {
     setCurrentSong(songQueue[prevIndex]);
     setCurrentSongIndex(prevIndex);
     setIsPlaying(true);
+    
+    // Add to recently played when playing previous song
+    if (songQueue[prevIndex]) {
+      addToRecentlyPlayed(songQueue[prevIndex]);
+    }
   };
 
   // 🎶 Utility Toggles
@@ -268,6 +331,7 @@ export const PlayerProvider = ({ children }) => {
     isMuted,
     songQueue,
     currentSongIndex,
+    recentlyPlayed, // Add recently played to context
 
     playSong,
     togglePlayPause,
@@ -295,7 +359,7 @@ export const PlayerProvider = ({ children }) => {
 
   return (
     <PlayerContext.Provider value={value}>
-      {/* 🎶 Hidden Audio Tag - Only render when currentSong exists */}
+      {/* 🎶 Hidden Audio TAG - Only render when currentSong exists */}
       {currentSong && (
         <audio
           ref={audioRef}

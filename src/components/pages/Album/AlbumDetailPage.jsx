@@ -1,13 +1,10 @@
 
-
-
-
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { PlayerContext } from "../../../context/PlayerContext";
 import { useTheme } from "../../../context/ThemeContext";
-import { FaPlay, FaClock, FaHeart, FaRandom, FaArrowLeft, FaMusic } from "react-icons/fa";
+import { FaPlay, FaPause, FaClock, FaHeart, FaRandom, FaArrowLeft, FaMusic } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const buildImageUrl = (path) => {
@@ -24,7 +21,7 @@ const AlbumDetailPage = () => {
   const [recommended, setRecommended] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isPlayingAll, setIsPlayingAll] = useState(false);
-  const { playSong, currentSong, isPlaying, likedSongs, toggleLike } = useContext(PlayerContext);
+  const { playSong, currentSong, isPlaying, likedSongs, toggleLike, togglePlayPause } = useContext(PlayerContext);
   const { isDarkMode } = useTheme();
 
   useEffect(() => {
@@ -71,6 +68,14 @@ const AlbumDetailPage = () => {
     }
   };
 
+  const handleSongClick = (song) => {
+    if (currentSong && currentSong._id === song._id) {
+      togglePlayPause();
+    } else {
+      playSong(song, albumSongs);
+    }
+  };
+
   const formatDuration = (seconds) => {
     if (!seconds) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -101,7 +106,7 @@ const AlbumDetailPage = () => {
           </p>
           <button
             onClick={() => navigate(-1)}
-            className={`mt-4 px-4 py-2 rounded-full ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-900'}`}
+            className={`mt-4 px-4 py-2 rounded-full ${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-200 text-gray-900 hover:bg-gray-300'} transition-colors`}
           >
             Go Back
           </button>
@@ -113,14 +118,15 @@ const AlbumDetailPage = () => {
   const album = albumSongs[0];
   const totalDuration = albumSongs.reduce((total, song) => total + (song.duration || 0), 0);
   const totalMinutes = Math.floor(totalDuration / 60);
+  const isAlbumPlaying = currentSong && albumSongs.some(song => song._id === currentSong._id) && isPlaying;
 
   return (
     <div className={`min-h-screen pb-20 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900'}`}>
       {/* Header with Back Button */}
-      <div className={`sticky top-0 z-10 ${isDarkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur-md p-4 flex items-center`}>
+      <div className={`sticky top-0 z-10 ${isDarkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur-md p-4 flex items-center border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
         <button
           onClick={() => navigate(-1)}
-          className={`p-2 rounded-full ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'}`}
+          className={`p-2 rounded-full ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-200'} transition-colors`}
         >
           <FaArrowLeft />
         </button>
@@ -138,14 +144,14 @@ const AlbumDetailPage = () => {
             <img
               src={buildImageUrl(album.coverArtPath)}
               alt={albumName}
-              className="w-48 h-48 md:w-60 md:h-60 object-cover rounded-xl shadow-2xl"
+              className="w-48 h-48 md:w-60 md:h-60 object-cover rounded-2xl shadow-2xl"
             />
-            <div className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-opacity ${isDarkMode ? 'bg-black/40' : 'bg-white/40'}`}>
+            <div className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-2xl flex items-center justify-center transition-opacity ${isDarkMode ? 'bg-black/40' : 'bg-white/40'}`}>
               <button
-                onClick={handlePlayAlbum}
-                className="p-4 rounded-full bg-green-500 hover:bg-green-400 transition-colors"
+                onClick={isAlbumPlaying ? togglePlayPause : handlePlayAlbum}
+                className="p-4 rounded-full bg-green-500 hover:bg-green-400 transition-colors shadow-lg"
               >
-                <FaPlay className="text-white" />
+                {isAlbumPlaying ? <FaPause className="text-white" /> : <FaPlay className="text-white" />}
               </button>
             </div>
           </motion.div>
@@ -165,14 +171,15 @@ const AlbumDetailPage = () => {
 
             <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
               <button
-                onClick={handlePlayAlbum}
-                className="px-6 py-3 rounded-full bg-green-500 hover:bg-green-400 text-white font-medium flex items-center transition-colors"
+                onClick={isAlbumPlaying ? togglePlayPause : handlePlayAlbum}
+                className="px-6 py-3 rounded-full bg-green-500 hover:bg-green-400 text-white font-medium flex items-center transition-colors shadow-md"
               >
-                <FaPlay className="mr-2" /> Play
+                {isAlbumPlaying ? <FaPause className="mr-2" /> : <FaPlay className="mr-2" />} 
+                {isAlbumPlaying ? 'Pause' : 'Play'}
               </button>
               <button
                 onClick={handleShufflePlay}
-                className="px-6 py-3 rounded-full border flex items-center transition-colors"
+                className="px-6 py-3 rounded-full border flex items-center transition-colors shadow-md"
                 style={{
                   backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
                   borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
@@ -189,8 +196,8 @@ const AlbumDetailPage = () => {
       <div className="p-6 md:p-10">
         <h2 className="text-2xl font-bold mb-6">Songs</h2>
         
-        <div className={`rounded-xl overflow-hidden ${isDarkMode ? 'bg-gray-800/50' : 'bg-white/50'} backdrop-blur-md`}>
-          <div className={`grid grid-cols-12 px-4 py-3 text-sm font-medium border-b ${isDarkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'}`}>
+        <div className={`rounded-2xl overflow-hidden ${isDarkMode ? 'bg-gray-800/50' : 'bg-white/50'} backdrop-blur-md border ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} shadow-lg`}>
+          <div className={`grid grid-cols-12 px-6 py-4 text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             <div className="col-span-1">#</div>
             <div className="col-span-6">Title</div>
             <div className="col-span-3">Album</div>
@@ -200,63 +207,75 @@ const AlbumDetailPage = () => {
           </div>
           
           <AnimatePresence>
-            {albumSongs.map((song, index) => (
-              <motion.div
-                key={song._id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className={`grid grid-cols-12 px-4 py-3 items-center group hover:${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100/50'} transition-colors ${
-                  currentSong?._id === song._id ? (isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100/50') : ''
-                }`}
-              >
-                <div className="col-span-1 text-gray-400 group-hover:hidden">
-                  {index + 1}
-                </div>
-                <div className="col-span-1 hidden group-hover:block">
-                  <button
-                    onClick={() => playSong(song, albumSongs)}
-                    className="text-white p-1 rounded-full bg-green-500 hover:bg-green-400 transition-colors"
-                  >
-                    <FaPlay size={10} />
-                  </button>
-                </div>
-                
-                <div className="col-span-6 flex items-center">
-                  <img
-                    src={buildImageUrl(song.coverArtPath)}
-                    alt={song.title}
-                    className="w-10 h-10 object-cover rounded mr-3"
-                  />
-                  <div>
-                    <p className={`font-medium ${currentSong?._id === song._id ? 'text-green-500' : ''}`}>
-                      {song.title}
-                    </p>
-                    <p className="text-sm opacity-70">{song.artist}</p>
+            {albumSongs.map((song, index) => {
+              const isCurrentSong = currentSong && currentSong._id === song._id;
+              const isSongPlaying = isCurrentSong && isPlaying;
+              
+              return (
+                <motion.div
+                  key={song._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={`grid grid-cols-12 px-6 py-4 items-center group hover:${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100/50'} transition-colors cursor-pointer ${
+                    isCurrentSong ? (isDarkMode ? 'bg-purple-900/30' : 'bg-purple-100/50') : ''
+                  }`}
+                  onClick={() => handleSongClick(song)}
+                >
+                  <div className="col-span-1 text-gray-400 group-hover:hidden">
+                    {index + 1}
                   </div>
-                </div>
-                
-                <div className="col-span-3 text-sm opacity-70 truncate">
-                  {song.album}
-                </div>
-                
-                <div className="col-span-2 flex justify-end items-center space-x-3">
-                  <button
-                    onClick={() => toggleLike(song._id)}
-                    className={`p-1 rounded-full transition-colors ${
-                      likedSongs?.has(song._id) 
-                        ? 'text-red-500 hover:text-red-400' 
-                        : 'text-gray-400 hover:text-gray-300'
-                    }`}
-                  >
-                    <FaHeart />
-                  </button>
-                  <span className="text-sm opacity-70">
-                    {formatDuration(song.duration)}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="col-span-1 hidden group-hover:flex items-center justify-center">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSongClick(song);
+                      }}
+                      className="text-white p-2 rounded-full bg-green-500 hover:bg-green-400 transition-colors"
+                    >
+                      {isSongPlaying ? <FaPause size={10} /> : <FaPlay size={10} />}
+                    </button>
+                  </div>
+                  
+                  <div className="col-span-6 flex items-center">
+                    <img
+                      src={buildImageUrl(song.coverArtPath)}
+                      alt={song.title}
+                      className="w-12 h-12 object-cover rounded-lg mr-4 shadow-md"
+                    />
+                    <div>
+                      <p className={`font-medium ${isCurrentSong ? 'text-green-500' : ''}`}>
+                        {song.title}
+                      </p>
+                      <p className="text-sm opacity-70">{song.artist}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="col-span-3 text-sm opacity-70 truncate">
+                    {song.album}
+                  </div>
+                  
+                  <div className="col-span-2 flex justify-end items-center space-x-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(song._id);
+                      }}
+                      className={`p-2 rounded-full transition-colors ${
+                        likedSongs?.has(song._id) 
+                          ? 'text-red-500 hover:text-red-400' 
+                          : 'text-gray-400 hover:text-gray-300'
+                      }`}
+                    >
+                      <FaHeart />
+                    </button>
+                    <span className="text-sm opacity-70">
+                      {formatDuration(song.duration)}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
       </div>
@@ -271,13 +290,13 @@ const AlbumDetailPage = () => {
                 key={song._id}
                 whileHover={{ y: -5 }}
                 className="group cursor-pointer"
-                onClick={() => navigate(`/dashboard/album/${song.album}`)}
+                onClick={() => navigate(`/dashboard/album/${encodeURIComponent(song.album)}`)}
               >
-                <div className="relative mb-3">
+                <div className="relative mb-3 overflow-hidden rounded-xl">
                   <img
                     src={buildImageUrl(song.coverArtPath)}
                     alt={song.title}
-                    className="w-full aspect-square object-cover rounded-xl shadow-lg"
+                    className="w-full aspect-square object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-opacity ${isDarkMode ? 'bg-black/40' : 'bg-white/40'}`}>
                     <button className="p-3 rounded-full bg-green-500 hover:bg-green-400 transition-colors">

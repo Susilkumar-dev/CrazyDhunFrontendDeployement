@@ -28,13 +28,13 @@ const AddSongPage = () => {
 
   // Language options
   const languageOptions = [
-    'Telugu', 'Hindi', 'English', 'Tamil', 'Kannada', 
+    'Telugu', 'Hindi','odia', 'bhajan','English', 'Tamil', 'Kannada', 
     'Malayalam', 'Bengali', 'Punjabi', 'Marathi', 'Other'
   ];
 
   // Genre options
   const genreOptions = [
-    'Pop', 'Rock', 'Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
+    'Pop', 'Rock', 'spiritual', 'bhajan' ,'Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
     'Folk', 'Country', 'Reggae', 'Blues', 'Metal', 'Indie', 'Other'
   ];
 

@@ -1,7 +1,5 @@
 
 
-
-
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -30,13 +28,13 @@ const AdminUploadSongPage = () => {
 
     // Language options
     const languageOptions = [
-        'Telugu', 'Hindi', 'English', 'Tamil', 'Kannada', 
-        'Malayalam', 'Bengali', 'Punjabi', 'Marathi', 'Other'
+        'Telugu', 'Hindi', 'English','odia', 'Tamil', 'Kannada',
+        'Malayalam', 'Bengali', 'Punjabi', 'bhajan', 'Marathi', 'Other',
     ];
 
     // Genre options
     const genreOptions = [
-        'Pop', 'Rock', 'Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
+        'Pop', 'Rock', 'spiritual','bhajan','Hip Hop', 'R&B', 'Jazz', 'Classical', 'Electronic',
         'Folk', 'Country', 'Reggae', 'Blues', 'Metal', 'Indie', 'Other'
     ];
 
@@ -88,7 +86,7 @@ const AdminUploadSongPage = () => {
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        setMessage(''); 
+        setMessage('');
         setError('');
         
         // Validate files before upload
@@ -117,16 +115,16 @@ const AdminUploadSongPage = () => {
                 return;
             }
             
-            const config = { 
-                headers: { 
-                    'Content-Type': 'multipart/form-data', 
-                    Authorization: `Bearer ${token}` 
-                } 
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }
             };
             
             const { data } = await axios.post(
-                `${import.meta.env.VITE_API_URL}/admin/songs`, 
-                formData, 
+                `${import.meta.env.VITE_API_URL}/admin/songs`,
+                formData,
                 config
             );
             
@@ -508,3 +506,6 @@ const AdminUploadSongPage = () => {
 };
 
 export default AdminUploadSongPage;
+
+
+

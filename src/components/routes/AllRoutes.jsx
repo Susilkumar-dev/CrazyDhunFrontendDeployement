@@ -23,8 +23,9 @@ import AccountPage from "../pages/dashboard/pages/profile/AccountPage";
 import PlaylistDetailPage from "../pages/dashboard/pages/playlist/PlaylistDetailPage";
 import ArtistDetailPage from "../pages/dashboard/pages/Artist/ArtistDetailPage";
 import AlbumDetailPage from "../pages/Album/AlbumDetailPage";
-import AdminAlbumManager from "../pages/dashboard/pages/admin/AdminAlbumManager";
+// import AdminAlbumManager from "../pages/dashboard/pages/admin/AdminAlbumManager";
 import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
+import AdminManageSongs from "../pages/dashboard/pages/admin/AdminManageSongs";
 // import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
 
 const MainLayout = () => (
@@ -146,9 +147,13 @@ const AllRoutes = () => {
                                     path: "approvals", 
                                     element: <AdminApprovalPage /> 
                                 },
+                                // { 
+                                //  path: "Edit-songs", 
+                                //  element: <AdminAlbumManager /> 
+                                // },
                                 { 
                                  path: "manage-songs", 
-                                 element: <AdminAlbumManager /> 
+                                 element: <AdminManageSongs /> 
                                 }
                                 
                                 

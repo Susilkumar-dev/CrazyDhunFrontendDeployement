@@ -1,9 +1,4 @@
 
-
-
-
-
-// components/dashboard/MobileFooter.js (updated with theme)
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FaHome, FaCompass, FaBook, FaSearch, FaUser } from 'react-icons/fa';

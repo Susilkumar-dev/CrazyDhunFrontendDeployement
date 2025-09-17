@@ -102,6 +102,10 @@ const DashBoard = () => {
                             <FaCheck className="mr-4" />
                             <span>Approvals</span>
                         </NavLink>
+                        {/* <NavLink to="/dashboard/manage-songs" className={({ isActive }) => linkClasses(isActive)}>
+                            <FaMusic className="mr-4" />
+                            <span>edit Songs</span>
+                        </NavLink> */}
                         <NavLink to="/dashboard/manage-songs" className={({ isActive }) => linkClasses(isActive)}>
                             <FaMusic className="mr-4" />
                             <span>Manage Songs</span>
