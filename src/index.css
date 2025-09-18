@@ -1165,3 +1165,26 @@ body {
     width: 100%;
   }
 }
+
+
+
+
+
+/* styles.css or index.css */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #333; /* Dark track */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #8b5cf6; /* Purple thumb */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa; /* Lighter purple on hover */
+}

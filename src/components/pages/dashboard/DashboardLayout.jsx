@@ -6,17 +6,17 @@ import { Outlet } from "react-router-dom";
 import DashBoard from "./DashBoard";
 import PlayerControls from "../../playercontrols/PlayerControls";
 import MobileFooter from './MobileFooter';
-import MusicSection from './pages/player/MusicSection'; 
+import MusicSection from './pages/player/MusicSection';
 
 const DashboardLayout = () => {
   const [isPlayerOpen, setPlayerOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen text-white transition-colors duration-300">
-      <DashBoard /> 
+      <DashBoard />
       
       <main className="ml-0 md:ml-64 p-6 pt-24 md:pt-6 pb-48 md:pb-28 relative z-10">
-        <Outlet /> 
+        <Outlet />
       </main>
       
       <PlayerControls onPlayerOpen={() => setPlayerOpen(true)} />
@@ -28,3 +28,8 @@ const DashboardLayout = () => {
 }
 
 export default DashboardLayout;
+
+
+
+
+
