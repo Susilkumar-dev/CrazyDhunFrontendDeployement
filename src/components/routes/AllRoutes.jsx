@@ -80,6 +80,7 @@ const AllRoutes = () => {
             path: "/signin", 
             element: <SignInPage /> 
         },
+        
         { 
             path: "/forgot-password", 
             element: <ForgotPasswordPage /> 

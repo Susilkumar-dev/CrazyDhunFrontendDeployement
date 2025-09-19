@@ -1,4 +1,3 @@
-// ForgotPasswordPage.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FiMail, FiArrowLeft, FiMusic } from "react-icons/fi";
@@ -23,7 +22,13 @@ const ForgotPasswordPage = () => {
         `${import.meta.env.VITE_API_URL}/user/forgot-password`,
         { email }
       );
+      
       setMessage(data.message);
+      
+      // Store email in localStorage for the reset password page
+      localStorage.setItem('resetEmail', email);
+      
+      // Navigate to reset password page
       navigate("/reset-password", { state: { email } });
     } catch (err) {
       console.error("Password reset error:", err);
