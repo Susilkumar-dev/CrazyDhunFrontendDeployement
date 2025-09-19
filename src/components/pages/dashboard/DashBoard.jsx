@@ -1,9 +1,7 @@
 
 
 
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { 
     FaHome, FaCompass, FaMusic, FaSignOutAlt, FaSearch, 
@@ -11,12 +9,14 @@ import {
     FaPlus, FaCheck, FaUpload, FaLink, FaSun, FaMoon 
 } from 'react-icons/fa';
 import { useTheme } from '../../../context/ThemeContext';
+import { PlayerContext } from '../../../context/PlayerContext';
 
 const DashBoard = () => {
     const navigate = useNavigate();
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
     const { isDarkMode, toggleTheme } = useTheme();
+    const { stopAudio } = useContext(PlayerContext);
 
     useEffect(() => {
         const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -26,6 +26,7 @@ const DashBoard = () => {
     }, []);
 
     const handleSignOut = () => {
+         stopAudio();
         localStorage.removeItem('userInfo');
         navigate('/signin');
     };
@@ -68,19 +69,40 @@ const DashBoard = () => {
                 </button>
 
                 {/* Standard User Links */}
-                <NavLink to="/dashboard" end className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink 
+                    to="/dashboard" 
+                    end 
+                    className={({ isActive }) => linkClasses(isActive)}
+                    onClick={() => setMobileMenuOpen(false)}
+                >
                     <FaHome className="mr-4" /><span>Home</span>
                 </NavLink>
-                <NavLink to="/dashboard/explore" className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink 
+                    to="/dashboard/explore" 
+                    className={({ isActive }) => linkClasses(isActive)}
+                    onClick={() => setMobileMenuOpen(false)}
+                >
                     <FaCompass className="mr-4" /><span>Explore</span>
                 </NavLink>
-                <NavLink to="/dashboard/playlist" className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink 
+                    to="/dashboard/playlist" 
+                    className={({ isActive }) => linkClasses(isActive)}
+                    onClick={() => setMobileMenuOpen(false)}
+                >
                     <FaMusic className="mr-4" /><span>Playlist</span>
                 </NavLink>
-                <NavLink to="/dashboard/library" className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink 
+                    to="/dashboard/library" 
+                    className={({ isActive }) => linkClasses(isActive)}
+                    onClick={() => setMobileMenuOpen(false)}
+                >
                     <FaBook className="mr-4" /><span>Library</span>
                 </NavLink>
-                <NavLink to="/dashboard/account" className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink 
+                    to="/dashboard/account" 
+                    className={({ isActive }) => linkClasses(isActive)}
+                    onClick={() => setMobileMenuOpen(false)}
+                >
                     <FaUserAlt className="mr-4" /><span>Account</span>
                 </NavLink>
 
@@ -90,35 +112,49 @@ const DashBoard = () => {
                 {userInfo && userInfo.role === 'admin' ? (
                     // ADMIN VIEW
                     <>
-                        <NavLink to="/dashboard/upload-song" className={({ isActive }) => linkClasses(isActive)}>
+                        <NavLink 
+                            to="/dashboard/upload-song" 
+                            className={({ isActive }) => linkClasses(isActive)}
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
                             <FaUpload className="mr-4" />
                             <span>Upload Song (File)</span>
                         </NavLink>
-                        <NavLink to="/dashboard/add-song-url" className={({ isActive }) => linkClasses(isActive)}>
+                        <NavLink 
+                            to="/dashboard/add-song-url" 
+                            className={({ isActive }) => linkClasses(isActive)}
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
                             <FaLink className="mr-4" />
                             <span>Add Song (URL)</span>
                         </NavLink>
-                        <NavLink to="/dashboard/approvals" className={({ isActive }) => linkClasses(isActive)}>
+                        <NavLink 
+                            to="/dashboard/approvals" 
+                            className={({ isActive }) => linkClasses(isActive)}
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
                             <FaCheck className="mr-4" />
                             <span>Approvals</span>
                         </NavLink>
-                        {/* <NavLink to="/dashboard/manage-songs" className={({ isActive }) => linkClasses(isActive)}>
-                            <FaMusic className="mr-4" />
-                            <span>edit Songs</span>
-                        </NavLink> */}
-                        <NavLink to="/dashboard/manage-songs" className={({ isActive }) => linkClasses(isActive)}>
+                        <NavLink 
+                            to="/dashboard/manage-songs" 
+                            className={({ isActive }) => linkClasses(isActive)}
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
                             <FaMusic className="mr-4" />
                             <span>Manage Songs</span>
                         </NavLink>
                     </>
                 ) : (
                     // REGULAR USER VIEW
-                        <NavLink to="/dashboard/add-song" className={({ isActive }) => linkClasses(isActive)}>
+                    <NavLink 
+                        to="/dashboard/add-song" 
+                        className={({ isActive }) => linkClasses(isActive)}
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
                         <FaPlus className="mr-4" />
                         <span>Request Song</span>
-                        </NavLink>
-                        
-                        
+                    </NavLink>
                 )}
             </nav>
 
@@ -138,6 +174,7 @@ const DashBoard = () => {
 
     return (
         <>
+            {/* Mobile Header */}
             <header className={`md:hidden p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-50 border-b ${
                 isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
             }`}>
@@ -148,17 +185,28 @@ const DashBoard = () => {
                 <button 
                     onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} 
                     className={isDarkMode ? "text-white p-2" : "text-gray-900 p-2"}
+                    aria-label="Toggle menu"
                 >
                     {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                 </button>
             </header>
 
-            <div className={`md:hidden fixed top-0 left-0 h-full w-64 p-4 flex flex-col transition-transform duration-300 ease-in-out transform z-40 ${
+            {/* Mobile Menu Backdrop */}
+            {isMobileMenuOpen && (
+                <div 
+                    className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+            )}
+
+            {/* Mobile Sidebar */}
+            <div className={`md:hidden fixed top-0 left-0 h-full w-4/5 max-w-xs p-4 flex flex-col transition-transform duration-300 ease-in-out transform z-50 ${
                 isDarkMode ? "bg-gray-800 border-r border-gray-700" : "bg-white border-r border-gray-200"
             } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{paddingTop: '5rem'}}>
                 {sidebarContent}
             </div>
 
+            {/* Desktop Sidebar */}
             <div className={`hidden md:flex w-64 h-screen fixed top-0 left-0 p-4 flex-col z-30 ${
                 isDarkMode ? "bg-gray-800 border-r border-gray-700" : "bg-white border-r border-gray-200"
             }`}>
@@ -169,6 +217,9 @@ const DashBoard = () => {
                 </h1>
                 {sidebarContent}
             </div>
+
+            {/* Content Padding for Mobile Header */}
+            <div className="md:hidden h-16"></div>
         </>
     );
 }

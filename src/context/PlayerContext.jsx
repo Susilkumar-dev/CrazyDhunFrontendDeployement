@@ -321,41 +321,54 @@ export const PlayerProvider = ({ children }) => {
   const onLoadedMetadata = () => setDuration(audioRef.current.duration);
   const onEnded = () => playNextSong();
 
-  // 🎶 Context Value
-  const value = {
-    currentSong,
-    isPlaying,
-    duration,
-    currentTime,
-    volume,
-    isMuted,
-    songQueue,
-    currentSongIndex,
-    recentlyPlayed, // Add recently played to context
 
-    playSong,
-    togglePlayPause,
-    playNextSong,
-    playPreviousSong,
+  const stopAudio = () => {
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+  }
+  setIsPlaying(false);
+  setCurrentSong(null);
+};
 
-    seek,
-    changeVolume,
-    toggleMute,
-
-    likedSongs,
-    likeSong,
-    unlikeSong,
-
-    userPlaylists,
-    fetchUserPlaylists: fetchInitialData,
-    addSongToPlaylist,
-
-    queueContext,
-    isShuffled,
-    toggleShuffle,
-    repeatMode,
-    toggleRepeat,
-  };
+// Then add it to the context value object
+const value = {
+  currentSong,
+  isPlaying,
+  duration,
+  currentTime,
+  volume,
+  isMuted,
+  songQueue,
+  currentSongIndex,
+  recentlyPlayed,
+  
+  // Add the stopAudio function here
+  stopAudio,
+  
+  playSong,
+  togglePlayPause,
+  playNextSong,
+  playPreviousSong,
+  
+  seek,
+  changeVolume,
+  toggleMute,
+  
+  likedSongs,
+  likeSong,
+  unlikeSong,
+  
+  userPlaylists,
+  fetchUserPlaylists: fetchInitialData,
+  addSongToPlaylist,
+  
+  queueContext,
+  isShuffled,
+  toggleShuffle,
+  repeatMode,
+  toggleRepeat,
+};
 
   return (
     <PlayerContext.Provider value={value}>

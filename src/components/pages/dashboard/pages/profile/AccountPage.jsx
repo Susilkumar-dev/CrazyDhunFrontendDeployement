@@ -302,7 +302,7 @@ const AccountPage = () => {
   const [isPicModalOpen, setIsPicModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [imageVersion, setImageVersion] = useState(0);
-  const { playSong, currentSong, isPlaying } = useContext(PlayerContext);
+  const { playSong, currentSong, isPlaying , stopAudio} = useContext(PlayerContext);
   const { isDarkMode } = useTheme();
 
   // Fetch profile data
@@ -333,6 +333,7 @@ const AccountPage = () => {
   }, [fetchProfileData]);
 
   const handleSignOut = () => {
+     stopAudio();
     localStorage.removeItem("userInfo");
     navigate("/signin");
   };
