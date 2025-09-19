@@ -580,7 +580,7 @@ const Exp = () => {
           <div className="relative flex items-center">
             <input
               type="text"
-              placeholder="Search for songs,or albums..."
+              placeholder="Search songs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
