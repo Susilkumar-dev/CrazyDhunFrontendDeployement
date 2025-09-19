@@ -3,10 +3,10 @@
   publish = "dist"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/test-redirect"
+  to = "/"
   status = 200
-
+  
 [context.production.environment]
   VITE_CLOUDINARY_CLOUD_NAME = "dnnni4us0"
   VITE_CLOUDINARY_UPLOAD_PRESET = "dhunimage"
