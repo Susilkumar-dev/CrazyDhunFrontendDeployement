@@ -6,6 +6,7 @@ import axios from 'axios';
 import { PlayerContext } from '../../../../../context/PlayerContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../../../../context/ThemeContext'; // Import the theme context
 
 // Helper function to build correct image URLs
 const buildImageUrl = (path) => {
@@ -35,6 +36,28 @@ const SearchPage = () => {
         tags: new Set()
     });
     const { playSong } = useContext(PlayerContext);
+    const { isDarkMode } = useTheme(); // Get theme state
+
+    // Theme-based classes
+    const themeClasses = {
+        bgGradient: isDarkMode 
+            ? 'bg-gradient-to-b from-gray-900 to-black' 
+            : 'bg-gradient-to-b from-gray-100 to-white',
+        containerBg: isDarkMode ? 'bg-gray-800' : 'bg-gray-100',
+        text: isDarkMode ? 'text-white' : 'text-gray-900',
+        textSecondary: isDarkMode ? 'text-gray-400' : 'text-gray-600',
+        inputBg: isDarkMode ? 'bg-gray-700' : 'bg-white',
+        inputText: isDarkMode ? 'text-white' : 'text-gray-900',
+        inputPlaceholder: isDarkMode ? 'placeholder-gray-400' : 'placeholder-gray-500',
+        cardBg: isDarkMode ? 'bg-gray-800' : 'bg-white',
+        cardHover: isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200',
+        border: isDarkMode ? 'border-gray-700' : 'border-gray-300',
+        icon: isDarkMode ? 'text-gray-400' : 'text-gray-500',
+        activeFilter: isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800',
+        suggestionBg: isDarkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100',
+        noResultsBg: isDarkMode ? 'bg-gray-800' : 'bg-white',
+        noResultsText: isDarkMode ? 'text-gray-400' : 'text-gray-600',
+    };
 
     // Fetch all songs on initial load to enable client-side searching
     useEffect(() => {
@@ -159,33 +182,33 @@ const SearchPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+            <div className={`min-h-screen flex items-center justify-center ${themeClasses.bgGradient}`}>
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
         );
     }
 
     return (
-        <div className="p-4 md:p-8 min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+        <div className={`p-4 md:p-8 min-h-screen ${themeClasses.bgGradient} ${themeClasses.text}`}>
             {/* Sticky Search Bar */}
             <motion.div
-                className="sticky top-0 z-10 bg-gradient-to-b from-gray-900 to-transparent pt-4 pb-2 mb-6"
+                className={`sticky top-0 z-10 ${isDarkMode ? 'bg-gradient-to-b from-gray-900 to-transparent' : 'bg-gradient-to-b from-gray-100 to-transparent'} pt-4 pb-2 mb-6`}
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
             >
-                <div className="flex items-center bg-gray-800 rounded-full px-4 py-3 shadow-lg mb-4">
-                    <FaSearch className="text-gray-400 mr-3" />
+                <div className={`flex items-center ${themeClasses.containerBg} rounded-full px-4 py-3 shadow-lg mb-4`}>
+                    <FaSearch className={`${themeClasses.icon} mr-3`} />
                     <input
                         type="text"
                         placeholder="Search songs, artists, albums, languages, genres, moods, or tags..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onBlur={() => handleAddToHistory(query)}
-                        className="w-full bg-transparent focus:outline-none text-lg"
+                        className={`w-full bg-transparent focus:outline-none text-lg ${themeClasses.inputText} ${themeClasses.inputPlaceholder}`}
                     />
                     {(query || hasActiveFilters) && (
-                        <button onClick={handleClearSearch} className="text-gray-400 hover:text-white ml-2">
+                        <button onClick={handleClearSearch} className={`${themeClasses.icon} hover:${isDarkMode ? 'text-white' : 'text-gray-900'} ml-2`}>
                             <FaTimes />
                         </button>
                     )}
@@ -195,7 +218,7 @@ const SearchPage = () => {
                 <div className="flex justify-between items-center mb-2">
                     <button 
                         onClick={() => setShowFilters(!showFilters)}
-                        className="flex items-center text-sm text-gray-400 hover:text-white transition-colors"
+                        className={`flex items-center text-sm ${themeClasses.textSecondary} hover:${themeClasses.text} transition-colors`}
                     >
                         <FaFilter className="mr-2" />
                         Advanced Filters
@@ -221,15 +244,15 @@ const SearchPage = () => {
                             exit={{ opacity: 0, height: 0 }}
                             className="overflow-hidden"
                         >
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-3 bg-gray-800 rounded-lg mt-2">
+                            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-3 ${themeClasses.cardBg} rounded-lg mt-2`}>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">
+                                    <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-1`}>
                                         <FaGlobe className="inline mr-1" /> Language
                                     </label>
                                     <select
                                         value={filters.language}
                                         onChange={(e) => handleFilterChange('language', e.target.value)}
-                                        className="w-full bg-gray-700 text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        className={`w-full ${themeClasses.inputBg} ${themeClasses.text} rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500`}
                                     >
                                         <option value="">All Languages</option>
                                         {availableFilters.languages.map(lang => (
@@ -239,13 +262,13 @@ const SearchPage = () => {
                                 </div>
                                 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">
+                                    <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-1`}>
                                         <FaHeadphones className="inline mr-1" /> Genre
                                     </label>
                                     <select
                                         value={filters.genre}
                                         onChange={(e) => handleFilterChange('genre', e.target.value)}
-                                        className="w-full bg-gray-700 text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        className={`w-full ${themeClasses.inputBg} ${themeClasses.text} rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500`}
                                     >
                                         <option value="">All Genres</option>
                                         {availableFilters.genres.map(genre => (
@@ -255,13 +278,13 @@ const SearchPage = () => {
                                 </div>
                                 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">
+                                    <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-1`}>
                                         <FaSmile className="inline mr-1" /> Mood
                                     </label>
                                     <select
                                         value={filters.mood}
                                         onChange={(e) => handleFilterChange('mood', e.target.value)}
-                                        className="w-full bg-gray-700 text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        className={`w-full ${themeClasses.inputBg} ${themeClasses.text} rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500`}
                                     >
                                         <option value="">All Moods</option>
                                         {availableFilters.moods.map(mood => (
@@ -271,13 +294,13 @@ const SearchPage = () => {
                                 </div>
                                 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">
+                                    <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-1`}>
                                         <FaTag className="inline mr-1" /> Tags
                                     </label>
                                     <select
                                         value={filters.tags}
                                         onChange={(e) => handleFilterChange('tags', e.target.value)}
-                                        className="w-full bg-gray-700 text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        className={`w-full ${themeClasses.inputBg} ${themeClasses.text} rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500`}
                                     >
                                         <option value="">All Tags</option>
                                         {availableFilters.tags.map(tag => (
@@ -293,9 +316,9 @@ const SearchPage = () => {
 
             <AnimatePresence mode="wait">
                 {query || hasActiveFilters ? (
-                    <SearchResults key="results" results={filteredResults} playSong={playSong} filters={filters} />
+                    <SearchResults key="results" results={filteredResults} playSong={playSong} filters={filters} themeClasses={themeClasses} isDarkMode={isDarkMode} />
                 ) : (
-                    <SearchHistory key="history" history={searchHistory} setQuery={setQuery} />
+                    <SearchHistory key="history" history={searchHistory} setQuery={setQuery} themeClasses={themeClasses} isDarkMode={isDarkMode} />
                 )}
             </AnimatePresence>
         </div>
@@ -303,7 +326,7 @@ const SearchPage = () => {
 };
 
 // Sub-Component for Displaying Search Results
-const SearchResults = ({ results, playSong, filters }) => {
+const SearchResults = ({ results, playSong, filters, themeClasses, isDarkMode }) => {
     const { songs, artists, albums } = results;
     const hasResults = songs.length > 0 || Object.keys(artists).length > 0 || Object.keys(albums).length > 0;
     
@@ -314,10 +337,10 @@ const SearchResults = ({ results, playSong, filters }) => {
                 animate={{ opacity: 1 }}
                 className="text-center py-12"
             >
-                <div className="bg-gray-800 rounded-lg p-8 max-w-md mx-auto">
+                <div className={`${themeClasses.noResultsBg} rounded-lg p-8 max-w-md mx-auto`}>
                     <FaSearch className="text-4xl text-gray-600 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold mb-2">No results found</h3>
-                    <p className="text-gray-400">
+                    <p className={themeClasses.noResultsText}>
                         Try different keywords or adjust your filters
                     </p>
                     <div className="mt-4 text-sm text-gray-500">
@@ -346,26 +369,26 @@ const SearchResults = ({ results, playSong, filters }) => {
         >
             {/* Active Filters Indicator */}
             {(filters.language || filters.genre || filters.mood || filters.tags) && (
-                <div className="bg-gray-800 rounded-lg p-4">
-                    <h3 className="text-sm font-semibold text-gray-400 mb-2">ACTIVE FILTERS</h3>
+                <div className={`${themeClasses.cardBg} rounded-lg p-4`}>
+                    <h3 className={`text-sm font-semibold ${themeClasses.textSecondary} mb-2`}>ACTIVE FILTERS</h3>
                     <div className="flex flex-wrap gap-2">
                         {filters.language && (
-                            <span className="bg-green-900 text-green-300 text-xs px-3 py-1 rounded-full">
+                            <span className={`${isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'} text-xs px-3 py-1 rounded-full`}>
                                 <FaGlobe className="inline mr-1" /> Language: {filters.language}
                             </span>
                         )}
                         {filters.genre && (
-                            <span className="bg-purple-900 text-purple-300 text-xs px-3 py-1 rounded-full">
+                            <span className={`${isDarkMode ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-800'} text-xs px-3 py-1 rounded-full`}>
                                 <FaHeadphones className="inline mr-1" /> Genre: {filters.genre}
                             </span>
                         )}
                         {filters.mood && (
-                            <span className="bg-blue-900 text-blue-300 text-xs px-3 py-1 rounded-full">
+                            <span className={`${isDarkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-800'} text-xs px-3 py-1 rounded-full`}>
                                 <FaSmile className="inline mr-1" /> Mood: {filters.mood}
                             </span>
                         )}
                         {filters.tags && (
-                            <span className="bg-yellow-900 text-yellow-300 text-xs px-3 py-1 rounded-full">
+                            <span className={`${isDarkMode ? 'bg-yellow-900 text-yellow-300' : 'bg-yellow-100 text-yellow-800'} text-xs px-3 py-1 rounded-full`}>
                                 <FaTag className="inline mr-1" /> Tag: {filters.tags}
                             </span>
                         )}
@@ -374,9 +397,9 @@ const SearchResults = ({ results, playSong, filters }) => {
             )}
             
             {songs.length > 0 && (
-                <SearchResultCategory title="Songs" icon={<FaMusic />} count={songs.length}>
+                <SearchResultCategory title="Songs" icon={<FaMusic />} count={songs.length} themeClasses={themeClasses}>
                     {songs.slice(0, 5).map(song => (
-                        <SongItem key={song._id} item={song} onPlay={() => playSong(song, songs)} />
+                        <SongItem key={song._id} item={song} onPlay={() => playSong(song, songs)} themeClasses={themeClasses} />
                     ))}
                     {songs.length > 5 && (
                         <div className="mt-4 text-center">
@@ -389,20 +412,20 @@ const SearchResults = ({ results, playSong, filters }) => {
             )}
             
             {Object.keys(artists).length > 0 && (
-                <SearchResultCategory title="Artists" icon={<FaUser />} count={Object.keys(artists).length}>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <SearchResultCategory title="Artists" icon={<FaUser />} count={Object.keys(artists).length} themeClasses={themeClasses}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {Object.entries(artists).map(([name, data]) => (
-                            <AlbumArtistItem key={name} name={name} data={data} onPlay={() => playSong(data.songs[0], data.songs)} type="artist" />
+                            <AlbumArtistItem key={name} name={name} data={data} onPlay={() => playSong(data.songs[0], data.songs)} type="artist" themeClasses={themeClasses} isDarkMode={isDarkMode} />
                         ))}
                     </div>
                 </SearchResultCategory>
             )}
 
             {Object.keys(albums).length > 0 && (
-                <SearchResultCategory title="Albums" icon={<FaCompactDisc />} count={Object.keys(albums).length}>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <SearchResultCategory title="Albums" icon={<FaCompactDisc />} count={Object.keys(albums).length} themeClasses={themeClasses}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {Object.entries(albums).map(([name, data]) => (
-                            <AlbumArtistItem key={name} name={name} data={data} onPlay={() => playSong(data.songs[0], data.songs)} type="album" />
+                            <AlbumArtistItem key={name} name={name} data={data} onPlay={() => playSong(data.songs[0], data.songs)} type="album" themeClasses={themeClasses} isDarkMode={isDarkMode} />
                         ))}
                     </div>
                 </SearchResultCategory>
@@ -412,7 +435,7 @@ const SearchResults = ({ results, playSong, filters }) => {
 };
 
 // Sub-Component for Displaying Search History
-const SearchHistory = ({ history, setQuery }) => (
+const SearchHistory = ({ history, setQuery, themeClasses, isDarkMode }) => (
     <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
@@ -421,26 +444,26 @@ const SearchHistory = ({ history, setQuery }) => (
         <div>
             <h2 className="text-2xl font-bold mb-4">Recent Searches</h2>
             {history.length > 0 ? (
-                <div className="bg-gray-800 rounded-lg overflow-hidden">
+                <div className={`${themeClasses.cardBg} rounded-lg overflow-hidden`}>
                     {history.map((term, index) => (
                         <motion.div
                             key={index}
-                            className="flex items-center p-4 hover:bg-gray-700 cursor-pointer transition-colors"
+                            className={`flex items-center p-4 ${themeClasses.cardHover} cursor-pointer transition-colors`}
                             onClick={() => setQuery(term)}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05 }}
                         >
-                            <FaHistory className="text-gray-500 mr-4" />
+                            <FaHistory className={`${themeClasses.icon} mr-4`} />
                             <span className="flex-1 text-lg">{term}</span>
-                            <FaChevronDown className="text-gray-500 transform rotate-270" />
+                            <FaChevronDown className={`${themeClasses.icon} transform rotate-270`} />
                         </motion.div>
                     ))}
                 </div>
             ) : (
                 <div className="text-center py-12">
                     <FaSearch className="text-4xl text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400">Search for your favorite songs, artists, or albums.</p>
+                    <p className={themeClasses.textSecondary}>Search for your favorite songs, artists, or albums.</p>
                 </div>
             )}
         </div>
@@ -455,7 +478,7 @@ const SearchHistory = ({ history, setQuery }) => (
                         onClick={() => setQuery(suggestion)}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="bg-gray-800 hover:bg-gray-700 text-white rounded-lg py-2 px-3 text-sm transition-colors"
+                        className={`${themeClasses.suggestionBg} ${themeClasses.text} rounded-lg py-2 px-3 text-sm transition-colors`}
                     >
                         {suggestion}
                     </motion.button>
@@ -464,9 +487,9 @@ const SearchHistory = ({ history, setQuery }) => (
         </div>
 
         {/* Search Tips */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className={`${themeClasses.cardBg} rounded-lg p-6`}>
             <h3 className="text-xl font-bold mb-4">Search Tips</h3>
-            <ul className="list-disc list-inside space-y-2 text-gray-300">
+            <ul className={`list-disc list-inside space-y-2 ${themeClasses.textSecondary}`}>
                 <li>Search by language: <span className="text-green-400">Hindi</span>, <span className="text-green-400">English</span>, etc.</li>
                 <li>Search by genre: <span className="text-green-400">Rock</span>, <span className="text-green-400">Pop</span>, <span className="text-green-400">Bhajan</span>, etc.</li>
                 <li>Search by mood: <span className="text-green-400">Happy</span>, <span className="text-green-400">Chill</span>, etc.</li>
@@ -478,7 +501,7 @@ const SearchHistory = ({ history, setQuery }) => (
 );
 
 // Reusable UI Components
-const SearchResultCategory = ({ title, icon, count, children }) => (
+const SearchResultCategory = ({ title, icon, count, children, themeClasses }) => (
     <div>
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
@@ -486,17 +509,17 @@ const SearchResultCategory = ({ title, icon, count, children }) => (
                 <h3 className="text-2xl font-bold">{title}</h3>
             </div>
             {count !== undefined && (
-                <span className="text-gray-400 text-sm">{count} results</span>
+                <span className={themeClasses.textSecondary + " text-sm"}>{count} results</span>
             )}
         </div>
         {children}
     </div>
 );
 
-const SongItem = ({ item, onPlay }) => (
+const SongItem = ({ item, onPlay, themeClasses }) => (
     <motion.div 
         whileHover={{ scale: 1.01 }}
-        className="flex items-center p-3 rounded-lg hover:bg-gray-800 transition-all cursor-pointer group"
+        className={`flex items-center p-3 rounded-lg ${themeClasses.cardHover} transition-all cursor-pointer group`}
         onClick={onPlay}
     >
         <div className="relative">
@@ -506,8 +529,8 @@ const SongItem = ({ item, onPlay }) => (
             </div>
         </div>
         <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-white truncate">{item.title}</h4>
-            <div className="flex items-center text-sm text-gray-400 flex-wrap">
+            <h4 className="font-semibold truncate">{item.title}</h4>
+            <div className={`flex items-center text-sm ${themeClasses.textSecondary} flex-wrap`}>
                 <span className="truncate">{item.artist}</span>
                 {(item.language || item.genre || item.mood || item.tags) && (
                     <>
@@ -522,7 +545,7 @@ const SongItem = ({ item, onPlay }) => (
                 )}
             </div>
         </div>
-        <div className="text-xs text-gray-500 ml-2">
+        <div className={`${themeClasses.textSecondary} text-xs ml-2`}>
             {item.duration ? (
                 `${Math.floor(item.duration / 60)}:${(item.duration % 60).toString().padStart(2, '0')}`
             ) : '--:--'}
@@ -530,10 +553,10 @@ const SongItem = ({ item, onPlay }) => (
     </motion.div>
 );
 
-const AlbumArtistItem = ({ name, data, onPlay, type }) => (
+const AlbumArtistItem = ({ name, data, onPlay, type, themeClasses, isDarkMode }) => (
     <motion.div 
         whileHover={{ y: -5 }}
-        className="bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-all group relative"
+        className={`${themeClasses.cardBg} rounded-lg p-4 ${themeClasses.cardHover} transition-all group relative`}
     >
         <Link to={`/dashboard/${type}/${encodeURIComponent(name)}`} className="block">
             <div className="relative mb-3">
@@ -552,8 +575,8 @@ const AlbumArtistItem = ({ name, data, onPlay, type }) => (
                     </button>
                 </div>
             </div>
-            <h4 className="font-semibold text-white truncate mb-1">{name}</h4>
-            <p className="text-sm text-gray-400">{data.songs.length} song{data.songs.length !== 1 ? 's' : ''}</p>
+            <h4 className="font-semibold truncate mb-1">{name}</h4>
+            <p className={`text-sm ${themeClasses.textSecondary}`}>{data.songs.length} song{data.songs.length !== 1 ? 's' : ''}</p>
         </Link>
     </motion.div>
 );
