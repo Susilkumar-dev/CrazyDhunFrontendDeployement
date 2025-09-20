@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useContext, useState } from 'react';
 import {
   FaPlayCircle, FaPauseCircle, FaStepBackward, FaStepForward,
@@ -8,6 +9,7 @@ import {
   FaHeart, FaRegHeart, FaPlus
 } from 'react-icons/fa';
 import { PlayerContext } from '../../context/PlayerContext';
+import { useTheme } from '../../context/ThemeContext'; // Import the theme context
 
 const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
   const {
@@ -16,6 +18,8 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
     playNextSong, playPreviousSong, songQueue, currentSongIndex,
     likedSongs, likeSong, unlikeSong, userPlaylists, addSongToPlaylist
   } = useContext(PlayerContext);
+
+  const { isDarkMode } = useTheme(); // Get the current theme mode
 
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
 
@@ -53,13 +57,32 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
 
   const playerZIndex = isMobileMenuOpen ? 40 : 50;
 
+  // Theme-based styles
+  const playerBg = isDarkMode 
+    ? "bg-gradient-to-r from-purple-900/80 via-black to-cyan-900/80" 
+    : "bg-gradient-to-r from-purple-200 via-white to-cyan-200";
+  
+  const playerBorder = isDarkMode 
+    ? "border-t border-purple-700/40" 
+    : "border-t border-purple-300";
+  
+  const progressBg = isDarkMode ? "bg-gray-700" : "bg-gray-300";
+  const textColor = isDarkMode ? "text-white" : "text-gray-900";
+  const secondaryTextColor = isDarkMode ? "text-gray-400" : "text-gray-600";
+  const modalBg = isDarkMode ? "bg-black/90" : "bg-white/95";
+  const modalBorder = isDarkMode ? "border-purple-600/40" : "border-purple-300";
+  const modalText = isDarkMode ? "text-gray-300" : "text-gray-700";
+  const modalHover = isDarkMode ? "hover:bg-purple-700/40 hover:text-white" : "hover:bg-purple-200 hover:text-gray-900";
+  const rangeAccent = isDarkMode ? "accent-cyan-400" : "accent-cyan-600";
+  const volumeRangeAccent = isDarkMode ? "accent-purple-400" : "accent-purple-600";
+
   return (
     <div 
-      className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-gradient-to-r from-purple-900/80 via-black to-cyan-900/80 backdrop-blur-lg border-t border-purple-700/40 shadow-[0_-2px_20px_rgba(0,0,0,0.8)]"
+      className={`fixed bottom-16 md:bottom-0 left-0 right-0 backdrop-blur-lg shadow-[0_-2px_20px_rgba(0,0,0,0.3)] ${playerBg} ${playerBorder}`}
       style={{ zIndex: playerZIndex }}
     >
       {/* 🔴 YouTube-like Slim Progress Bar (top of controls) */}
-      <div className="h-1 bg-gray-700 relative w-full">
+      <div className={`h-1 ${progressBg} relative w-full`}>
         <div
           className="h-1 bg-red-500 transition-all duration-150 ease-linear"
           style={{ width: duration ? `${(currentTime / duration) * 100}%` : "0%" }}
@@ -69,8 +92,8 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
       <div className="px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
         {/* Playlist Add Modal */}
         {isPlaylistModalOpen && (
-          <div className="absolute bottom-20 right-4 bg-black/90 backdrop-blur-xl border border-purple-600/40 rounded-lg shadow-2xl p-3 w-56 animate-fade-in">
-            <h4 className="text-white text-sm font-semibold p-2 border-b border-gray-700/50">
+          <div className={`absolute bottom-20 right-4 backdrop-blur-xl rounded-lg shadow-2xl p-3 w-56 animate-fade-in ${modalBg} border ${modalBorder}`}>
+            <h4 className={`font-semibold p-2 border-b ${isDarkMode ? "border-gray-700/50 text-white" : "border-gray-300/50 text-gray-800"}`}>
               Add to Playlist
             </h4>
             {userPlaylists.length > 0 ? (
@@ -78,13 +101,13 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
                 <button
                   key={playlist._id}
                   onClick={() => { addSongToPlaylist(playlist._id, currentSong._id); setIsPlaylistModalOpen(false); }}
-                  className="w-full text-left p-2 text-gray-300 hover:bg-purple-700/40 hover:text-white rounded transition"
+                  className={`w-full text-left p-2 rounded transition ${modalText} ${modalHover}`}
                 >
                   {playlist.name}
                 </button>
               ))
             ) : (
-              <p className="p-2 text-gray-400 text-sm">No playlists.</p>
+              <p className={`p-2 text-sm ${secondaryTextColor}`}>No playlists.</p>
             )}
           </div>
         )}
@@ -95,22 +118,22 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
             <img src={buildImageUrl(currentSong.coverArtPath)} alt="Album Art"
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-md shadow-[0_0_10px_rgba(0,255,200,0.5)]" />
             <div className="hidden sm:block">
-              <h4 className="font-semibold text-white truncate group-hover:text-cyan-400 transition text-sm sm:text-base">
+              <h4 className={`font-semibold truncate group-hover:text-cyan-400 transition text-sm sm:text-base ${textColor}`}>
                 {currentSong.title}
               </h4>
-              <p className="text-xs text-gray-400">{currentSong.artist}</p>
+              <p className={`text-xs ${secondaryTextColor}`}>{currentSong.artist}</p>
             </div>
           </button>
         </div>
 
         {/* Center: Main Controls */}
         <div className="w-1/2 flex flex-col items-center px-1 sm:px-2">
-          <div className="flex items-center space-x-3 sm:space-x-5 mb-1 sm:mb-2 text-gray-400">
+          <div className={`flex items-center space-x-3 sm:space-x-5 mb-1 sm:mb-2 ${secondaryTextColor}`}>
             <button onClick={playPreviousSong} disabled={!hasPrev}
               className="hover:text-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition">
               <FaStepBackward size={18} />
             </button>
-            <button onClick={togglePlayPause} className="text-white hover:scale-110 transition-transform">
+            <button onClick={togglePlayPause} className={`hover:scale-110 transition-transform ${textColor}`}>
               {isPlaying ? <FaPauseCircle size={36} /> : <FaPlayCircle size={36} />}
             </button>
             <button onClick={playNextSong} disabled={!hasNext}
@@ -121,34 +144,34 @@ const PlayerControls = ({ onPlayerOpen, isMobileMenuOpen }) => {
 
           {/* Existing Progress Bar (keep it) */}
           <div className="flex items-center w-full max-w-lg gap-2">
-            <span className="text-[10px] sm:text-xs text-gray-400">{formatTime(currentTime)}</span>
+            <span className={`text-[10px] sm:text-xs ${secondaryTextColor}`}>{formatTime(currentTime)}</span>
             <input
               type="range" min="0" max={duration || 0} value={currentTime}
               onChange={(e) => seek(e.target.value)}
-              className="w-full h-1.5 sm:h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+              className={`w-full h-1.5 sm:h-2 ${progressBg} rounded-lg appearance-none cursor-pointer ${rangeAccent}`}
             />
-            <span className="text-[10px] sm:text-xs text-gray-400">{formatTime(duration)}</span>
+            <span className={`text-[10px] sm:text-xs ${secondaryTextColor}`}>{formatTime(duration)}</span>
           </div>
         </div>
 
         {/* Right Side: Like + Volume + Add */}
         <div className="w-1/4 flex items-center justify-end space-x-2 sm:space-x-3">
           <button onClick={handleLikeToggle}
-            className={`transition ${isLiked ? 'text-pink-500 hover:text-pink-400' : 'text-gray-400 hover:text-white'}`}>
+            className={`transition ${isLiked ? 'text-pink-500 hover:text-pink-400' : `${secondaryTextColor} hover:${textColor}`}`}>
             {isLiked ? <FaHeart size={18} /> : <FaRegHeart size={18} />}
           </button>
-          <button onClick={toggleMute} className="text-gray-400 hover:text-white transition">
+          <button onClick={toggleMute} className={`${secondaryTextColor} hover:${textColor} transition`}>
             <VolumeIcon />
           </button>
           <button onClick={() => setIsPlaylistModalOpen(!isPlaylistModalOpen)}
-            className="text-gray-400 hover:text-cyan-400 transition">
+            className={`${secondaryTextColor} hover:text-cyan-400 transition`}>
             <FaPlus size={18} />
           </button>
           <input
             type="range" min="0" max="1" step="0.01"
             value={isMuted ? 0 : volume}
             onChange={(e) => changeVolume(e.target.value)}
-            className="hidden sm:inline-block w-16 h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-400"
+            className={`hidden sm:inline-block w-16 h-1.5 ${progressBg} rounded-lg appearance-none cursor-pointer ${volumeRangeAccent}`}
           />
         </div>
       </div>

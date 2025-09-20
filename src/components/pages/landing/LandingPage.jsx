@@ -47,8 +47,8 @@ const LandingPage = () => {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode 
-        ? 'bg-gradient-to-b from-gray-900 via-green-900 to-black text-white' 
+      isDarkMode
+        ? 'bg-gradient-to-b from-gray-900 via-green-900 to-black text-white'
         : 'bg-gradient-to-b from-gray-100 via-green-100 to-gray-300 text-gray-900'
     }`}>
       
@@ -57,8 +57,8 @@ const LandingPage = () => {
         <button
           onClick={toggleTheme}
           className={`p-2 rounded-full ${
-            isDarkMode 
-              ? 'bg-gray-800 text-yellow-300 hover:bg-gray-700' 
+            isDarkMode
+              ? 'bg-gray-800 text-yellow-300 hover:bg-gray-700'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -73,7 +73,7 @@ const LandingPage = () => {
       <div className="container mx-auto px-6 py-24">
         {/* Hero Section */}
         <section className="text-center pt-16 pb-12">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -81,7 +81,7 @@ const LandingPage = () => {
           >
             Discover Your Next Favorite Song
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
@@ -96,11 +96,11 @@ const LandingPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
           >
-            <Link 
-              to="/signup" 
+            <Link
+              to="/signup"
               className={`inline-block font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 ${
-                isDarkMode 
-                  ? 'bg-green-600 text-white hover:bg-green-700' 
+                isDarkMode
+                  ? 'bg-green-600 text-white hover:bg-green-700'
                   : 'bg-green-500 text-white hover:bg-green-600'
               }`}
             >
@@ -115,33 +115,33 @@ const LandingPage = () => {
             isDarkMode ? 'text-white' : 'text-gray-900'
           }`}>Featured Playlists</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-            <PlaylistCard 
-              image="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" 
-              title="Top Global Hits" 
+            <PlaylistCard
+              image="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+              title="Top Global Hits"
               description="The biggest tracks from around the world."
               isDarkMode={isDarkMode}
             />
-            <PlaylistCard 
-              image="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" 
-              title="Party Anthems" 
+            <PlaylistCard
+              image="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+              title="Party Anthems"
               description="Get the party started with these bangers."
               isDarkMode={isDarkMode}
             />
-            <PlaylistCard 
-              image="https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" 
-              title="Chill & Relax" 
+            <PlaylistCard
+              image="https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+              title="Chill & Relax"
               description="Unwind and relax with calming beats."
               isDarkMode={isDarkMode}
             />
-            <PlaylistCard 
-              image="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" 
-              title="Workout Energy" 
+            <PlaylistCard
+              image="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+              title="Workout Energy"
               description="High-energy tracks to fuel your workout."
               isDarkMode={isDarkMode}
             />
-            <PlaylistCard 
-              image="https://images.unsplash.com/photo-1487180144351-b8472da7d491?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=872&q=80" 
-              title="Rock Classics" 
+            <PlaylistCard
+              image="https://images.unsplash.com/photo-1487180144351-b8472da7d491?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=872&q=80"
+              title="Rock Classics"
               description="Legendary tracks from the greatest bands."
               isDarkMode={isDarkMode}
             />
@@ -160,3 +160,9 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
+
+
+
+
+

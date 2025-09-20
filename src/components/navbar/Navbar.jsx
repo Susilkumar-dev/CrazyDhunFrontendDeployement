@@ -12,8 +12,8 @@ const Navbar = () => {
   
   return (
     <header className={`fixed top-0 left-0 right-0 z-20 backdrop-blur-lg shadow-md transition-colors duration-300 ${
-      isDarkMode 
-        ? "bg-gradient-to-r from-gray-900 via-green-900 to-black" 
+      isDarkMode
+        ? "bg-gradient-to-r from-gray-900 via-green-900 to-black"
         : "bg-gradient-to-r from-blue-100 via-green-100 to-purple-100"
     }`}>
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -32,8 +32,8 @@ const Navbar = () => {
           <button
             onClick={toggleTheme}
             className={`p-2 rounded-full mr-4 ${
-              isDarkMode 
-                ? "bg-gray-800 text-yellow-300 hover:bg-gray-700" 
+              isDarkMode
+                ? "bg-gray-800 text-yellow-300 hover:bg-gray-700"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             } transition-colors duration-200`}
             aria-label="Toggle theme"
@@ -44,8 +44,8 @@ const Navbar = () => {
           <Link
             to="/signup"
             className={`font-medium transition-colors duration-200 mr-6 ${
-              isDarkMode 
-                ? "text-gray-300 hover:text-green-400" 
+              isDarkMode
+                ? "text-gray-300 hover:text-green-400"
                 : "text-gray-700 hover:text-green-600"
             }`}
           >
@@ -54,8 +54,8 @@ const Navbar = () => {
           <Link
             to="/signin"
             className={`font-semibold py-2 px-5 rounded-full transition-all duration-300 shadow-md ${
-              isDarkMode 
-                ? "bg-green-500 hover:bg-green-600 text-white hover:shadow-green-500/40" 
+              isDarkMode
+                ? "bg-green-500 hover:bg-green-600 text-white hover:shadow-green-500/40"
                 : "bg-green-600 hover:bg-green-700 text-white hover:shadow-green-600/40"
             }`}
           >
@@ -68,3 +68,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
