@@ -27,8 +27,9 @@ import AlbumDetailPage from "../pages/Album/AlbumDetailPage";
 // import AdminAlbumManager from "../pages/dashboard/pages/admin/AdminAlbumManager";
 import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
 import AdminManageSongs from "../pages/dashboard/pages/admin/AdminManageSongs";
-import ForgotPasswordPage from "../pages/forgotPassword/ForgotPasswordPage";
-import ResetPasswordPage from "../pages/forgotPassword/ResetPasswordPage";
+import ForgotPasswordPage from "../pages/forgotPassword/ForgotPasswordPage"
+import ResetPasswordPage from "../pages/forgotPassword/ResetPasswordPage"
+
 // import AdminAddSongByUrlPage from "../pages/dashboard/pages/addsong/AdminAddSongByUrlPage";
 
 const MainLayout = () => (
@@ -81,15 +82,16 @@ const AllRoutes = () => {
             path: "/signin", 
             element: <SignInPage /> 
         },
+        { 
+         path: "/forgot-password", 
+          element: <ForgotPasswordPage /> 
+          },
+        { 
+        path: "/reset-password", 
+            element: <ResetPasswordPage /> 
+        },
         
-        { 
-            path: "/forgot-password", 
-            element: <ForgotPasswordPage /> 
-        },
-        { 
-             path: "/reset-password", 
-             element: <ResetPasswordPage /> 
-        },
+       
         
 
         {
