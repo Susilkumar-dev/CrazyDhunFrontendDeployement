@@ -1,7 +1,8 @@
 
 
 import React from "react";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+// import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";  
+import { createHashRouter, RouterProvider, Outlet } from "react-router-dom";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import PrivateRoutes from "../privateRoutes/PrivateRoutes";
 import AdminRoute from "../privateRoutes/AdminRouts";
@@ -58,7 +59,7 @@ const ErrorBoundary = ({ error }) => {
 };
 
 const AllRoutes = () => {
-    const myRoutes = createBrowserRouter([
+    const myRoutes = createHashRouter([
         {
             path: "/",
             element: <MainLayout />,
