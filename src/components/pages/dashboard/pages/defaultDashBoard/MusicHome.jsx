@@ -3134,6 +3134,7 @@ const NewReleasesSection = ({ songs, playSong, currentSong, isPlaying, togglePla
 };
 
 // Language Section
+// Language Section - FIXED VERSION
 const LanguageSection = ({ songsByLanguage, onCategorySelect, onPlayAll, isDarkMode }) => {
   const languages = [
     { name: "Hindi", color: "bg-red-500" },
@@ -3147,6 +3148,14 @@ const LanguageSection = ({ songsByLanguage, onCategorySelect, onPlayAll, isDarkM
     { name: "Haryanvi", color: "bg-teal-500" },
     { name: "Rajasthani", color: "bg-amber-500" },
   ];
+
+  // Add this function for case-insensitive matching
+  const getSongsForLanguage = (languageName) => {
+    const languageKey = Object.keys(songsByLanguage).find(
+      key => key.toLowerCase() === languageName.toLowerCase()
+    );
+    return languageKey ? songsByLanguage[languageKey] : [];
+  };
 
   return (
     <section className={`p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg border ${
@@ -3176,7 +3185,7 @@ const LanguageSection = ({ songsByLanguage, onCategorySelect, onPlayAll, isDarkM
       
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
         {languages.map((language) => {
-          const songs = songsByLanguage[language.name] || [];
+          const songs = getSongsForLanguage(language.name); // Use the new function
           return (
             <motion.div
               key={language.name}
@@ -3186,7 +3195,7 @@ const LanguageSection = ({ songsByLanguage, onCategorySelect, onPlayAll, isDarkM
                   : "bg-white/60 border border-gray-200/50 hover:border-purple-400/50"
               }`}
               whileHover={{ y: -3, scale: 1.02 }}
-              onClick={(e) => onCategorySelect("language", language.name, songs ,e)}
+              onClick={(e) => onCategorySelect("language", language.name, songs, e)}
             >
               <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full ${language.color} flex items-center justify-center text-white font-bold text-md md:text-lg mb-2 md:mb-3`}>
                 {language.name.charAt(0)}
