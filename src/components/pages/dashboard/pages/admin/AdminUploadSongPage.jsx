@@ -28,7 +28,7 @@ const AdminUploadSongPage = () => {
 
     // Language options
     const languageOptions = [
-        'Telugu', 'Hindi', 'English','odia', 'Tamil', 'Kannada',
+        'Telugu', 'Hindi', 'English','Odia', 'Tamil', 'Kannada',
         'Malayalam', 'Bengali', 'Punjabi', 'bhajan', 'Marathi', 'Other',
     ];
 

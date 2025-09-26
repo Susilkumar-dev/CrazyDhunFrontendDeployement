@@ -62,7 +62,7 @@ const AdminAddSongByUrlPage = () => {
 
   // Language options
   const languageOptions = [
-    'Telugu', 'Hindi','odia','bhajan', 'English', 'Tamil', 'Kannada',
+    'Telugu', 'Hindi','Odia','bhajan', 'English', 'Tamil', 'Kannada',
     'Malayalam', 'Bengali', 'Punjabi', 'Marathi', 'Other'
   ];
 
