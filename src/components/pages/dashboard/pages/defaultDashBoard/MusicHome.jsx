@@ -3141,12 +3141,13 @@ const LanguageSection = ({ songsByLanguage, onCategorySelect, onPlayAll, isDarkM
     { name: "Odia", color: "bg-blue-500" },
     { name: "Tamil", color: "bg-yellow-500" },
     { name: "Telugu", color: "bg-green-500" },
+    { name: "Punjabi", color: "bg-green-500" },
     { name: "English", color: "bg-purple-500" },
     { name: "Malayalam", color: "bg-pink-500" },
     { name: "Bhojpuri", color: "bg-orange-500" },
     { name: "Marathi", color: "bg-indigo-500" },
     { name: "Haryanvi", color: "bg-teal-500" },
-    { name: "Rajasthani", color: "bg-amber-500" },
+    
   ];
 
   // Add this function for case-insensitive matching
