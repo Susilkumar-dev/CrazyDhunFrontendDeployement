@@ -17,23 +17,44 @@ const SignUpPage = () => {
     const [loading, setLoading] = useState(false);
 
     const handleSignUp = async (e) => {
-        e.preventDefault();
-        if (password !== confirmPassword) {
-            setError("Passwords do not match");
-            return;
-        }
-        setError('');
-        setLoading(true);
-        try {
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/public/register`, { username, email, password });
-            console.log(data.message);
-            navigate('/verify-otp', { state: { email: email } });
-        } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed.');
-            setLoading(false);
-        }
-    };
+    e.preventDefault();
+    
+    // Validation
+    if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
+    }
+    if (password.length < 6) {
+        setError("Password must be at least 6 characters long");
+        return;
+    }
 
+    setError('');
+    setLoading(true);
+    
+    try {
+        const { data } = await axios.post(
+            `${import.meta.env.VITE_API_URL}/public/register`, 
+            { username, email, password },
+            { timeout: 10000 } // 10 second timeout
+        );
+        
+        console.log(data.message);
+        navigate('/verify-otp', { state: { email: email } });
+        
+    } catch (err) {
+        console.error('Registration error:', err);
+        
+        if (err.code === 'NETWORK_ERROR' || !err.response) {
+            setError('Network error. Please check your connection.');
+        } else if (err.response.status === 500) {
+            setError('Server error. Please try again later.');
+        } else {
+            setError(err.response?.data?.message || 'Registration failed.');
+        }
+        setLoading(false);
+    }
+};
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="relative z-10 w-full max-w-sm bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg p-8">
