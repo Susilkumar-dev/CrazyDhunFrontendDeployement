@@ -29,7 +29,7 @@ const AdminUploadSongPage = () => {
     // Language options
     const languageOptions = [
         'Telugu', 'Hindi', 'English','Odia', 'Tamil', 'Kannada',
-        'Malayalam', 'Bengali', 'Punjabi', 'bhajan', 'Marathi', 'Other',
+        'Malayalam', 'Bengali', 'Punjabi',  'Marathi', 'Other',
     ];
 
     // Genre options
