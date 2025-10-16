@@ -55,7 +55,7 @@ const ResetPasswordPage = () => {
 
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/user/reset-password`,
+        `${import.meta.env.VITE_API_URL}/public/reset-password`,
         {
           email: formData.email,
           otp: formData.otp,
